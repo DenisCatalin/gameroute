@@ -23,7 +23,8 @@ export async function POST(req: Request) {
       const uploadedImageUrls = [];
       let resource = "";
       let name = "";
-      if (File) {
+
+      if (typeof File !== "undefined") {
         for (const [key, value] of formDataArray) {
           if (key === "resource") {
             resource = value.toString();
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
         }
         return NextResponse.json({ uploadedImageUrls }, { status: 200 });
       } else {
-        return NextResponse.json({ error: "error" }, { status: 500 });
+        return NextResponse.json({ error: "File object is not defined" }, { status: 500 });
       }
     } catch (e) {
       console.error(e);
