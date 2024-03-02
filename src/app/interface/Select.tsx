@@ -7,12 +7,13 @@ type Props = {
   options: string[];
   value: string;
   select: (option: string) => void;
+  styles?: string;
 };
 
-const Select = ({ options, value, select }: Props) => {
+const Select = ({ options, value, select, styles }: Props) => {
   return (
     <Listbox value={value} onChange={select}>
-      <div className="relative mt-1">
+      <div className={`relative mt-1 ${styles}`}>
         <Listbox.Button className="relative w-full cursor-default rounded-lg bg-coverLight py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-darkMain focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-darkMain sm:text-sm dark:bg-coverDark">
           <span className="block truncate text-dark dark:text-light font-bold">{value}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">

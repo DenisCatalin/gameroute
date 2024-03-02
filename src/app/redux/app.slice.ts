@@ -7,6 +7,8 @@ export type AppState = {
   currentPage: string;
   snackbar: SnackbarState;
   locationToBeAdded: boolean;
+  showGallery: boolean;
+  gallery: string[];
 };
 
 const initialState: AppState = {
@@ -14,6 +16,8 @@ const initialState: AppState = {
   navigation: false,
   currentPage: "/",
   locationToBeAdded: false,
+  gallery: [],
+  showGallery: false,
   snackbar: {
     title: "",
     message: "",
@@ -45,6 +49,12 @@ export const appSlice = createSlice({
     setLocationToBeAdded(state: any, action: PayloadAction<boolean>) {
       state.locationToBeAdded = action.payload;
     },
+    setAppGallery(state: any, action: PayloadAction<string[]>) {
+      state.gallery = action.payload;
+    },
+    setShowGallery(state: any, action: PayloadAction<boolean>) {
+      state.showGallery = action.payload;
+    },
   },
 });
 
@@ -55,5 +65,7 @@ export const {
   setAppCurrentPage,
   setAppSnackbar,
   setLocationToBeAdded,
+  setAppGallery,
+  setShowGallery,
 } = appSlice.actions;
 export const appReducer = appSlice.reducer;

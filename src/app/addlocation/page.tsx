@@ -190,7 +190,7 @@ const AddLocationPage = () => {
       if (locations && imageLinks.length > 0) {
         try {
           await locationsRef.add({
-            id: location.length + 1,
+            id: locations.length + 1,
             locationName: form.locationName,
             locationTag: form.locationTag,
             resource: resource,

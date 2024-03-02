@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./Providers";
 import SnackbarWrapper from "./components/SnackbarWrapper";
 import Header from "./components/Header/Header";
+import GalleryWrapper from "./components/GalleryWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <main className="relative transition-all bg-light font-main dark:bg-dark min-h-dvh w-full flex flex-col lg2:px-24 lg2:py-4">
+          <main className="select-none relative transition-all bg-light font-main dark:bg-dark min-h-dvh w-full flex flex-col lg2:px-24 lg2:py-4">
             <SnackbarWrapper />
+            <GalleryWrapper />
             <Header />
             {children}
           </main>
