@@ -1,13 +1,9 @@
 import { NextResponse } from "next/server";
+import formidable from "formidable";
 import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 
-export const dynamic = "auto";
-export const dynamicParams = true;
-export const revalidate = false;
-export const fetchCache = "auto";
-export const runtime = "nodejs";
-export const preferredRegion = "auto";
-export const maxDuration = 5;
+const { readFile } = fs.promises;
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -15,37 +11,44 @@ cloudinary.config({
   api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_API_SECRET,
 });
 
-export async function POST(req: Request) {
+export async function POST(req: any) {
   if (req.method === "POST") {
     try {
-      const formData = await req.formData();
-      const formDataArray = Array.from(formData);
-      const uploadedImageUrls = [];
-      let resource = "";
-      let name = "";
-      if (File) {
-        for (const [key, value] of formDataArray) {
-          if (key === "resource") {
-            resource = value.toString();
-          } else if (key === "name") {
-            name = value.toString();
-          } else if (value instanceof File) {
-            const file = value;
-            const b64 = Buffer.from(await file.arrayBuffer()).toString("base64");
-            let dataURI = "data:" + file.type + ";base64," + b64;
+      const form = new formidable.IncomingForm();
+      form.parse(req, async (err: any, fields: any, files: any) => {
+        if (err) {
+          console.error("Error parsing form:", err);
+          return NextResponse.json({ error: "Error parsing form" }, { status: 500 });
+        }
+
+        const resource = fields.resource;
+        const name = fields.name;
+        const uploadedImageUrls = [];
+
+        // Handling multiple files
+        const fileKeys = Object.keys(files);
+        for (const key of fileKeys) {
+          const file = files[key];
+
+          if (file) {
+            const b64 = Buffer.from(await readFile(file.path)).toString("base64");
+            const dataURI = "data:" + file.type + ";base64," + b64;
             const uploadedImage = await cloudinary.uploader.upload(dataURI, {
               folder: `Blackwater/${resource}/${name}`,
             });
             uploadedImageUrls.push(uploadedImage.secure_url);
           }
         }
-        return NextResponse.json({ uploadedImageUrls }, { status: 200 });
-      } else {
-        return NextResponse.json({ error: "error" }, { status: 500 });
-      }
+
+        if (uploadedImageUrls.length > 0) {
+          return NextResponse.json({ uploadedImageUrls }, { status: 200 });
+        } else {
+          return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
+        }
+      });
     } catch (e) {
-      console.error(e);
-      return NextResponse.json({ e }, { status: 500 });
+      console.error("Error uploading file:", e);
+      return NextResponse.json({ error: "Error uploading file" }, { status: 500 });
     }
   }
 }
