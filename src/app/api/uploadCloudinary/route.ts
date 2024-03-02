@@ -23,22 +23,26 @@ export async function POST(req: Request) {
       const uploadedImageUrls = [];
       let resource = "";
       let name = "";
-      for (const [key, value] of formDataArray) {
-        if (key === "resource") {
-          resource = value.toString();
-        } else if (key === "name") {
-          name = value.toString();
-        } else if (value instanceof File) {
-          const file = value;
-          const b64 = Buffer.from(await file.arrayBuffer()).toString("base64");
-          let dataURI = "data:" + file.type + ";base64," + b64;
-          const uploadedImage = await cloudinary.uploader.upload(dataURI, {
-            folder: `Blackwater/${resource}/${name}`,
-          });
-          uploadedImageUrls.push(uploadedImage.secure_url);
+      if (File) {
+        for (const [key, value] of formDataArray) {
+          if (key === "resource") {
+            resource = value.toString();
+          } else if (key === "name") {
+            name = value.toString();
+          } else if (value instanceof File) {
+            const file = value;
+            const b64 = Buffer.from(await file.arrayBuffer()).toString("base64");
+            let dataURI = "data:" + file.type + ";base64," + b64;
+            const uploadedImage = await cloudinary.uploader.upload(dataURI, {
+              folder: `Blackwater/${resource}/${name}`,
+            });
+            uploadedImageUrls.push(uploadedImage.secure_url);
+          }
         }
+        return NextResponse.json({ uploadedImageUrls }, { status: 200 });
+      } else {
+        return NextResponse.json({ error: "error" }, { status: 500 });
       }
-      return NextResponse.json({ uploadedImageUrls }, { status: 200 });
     } catch (e) {
       console.error(e);
       return NextResponse.json({ e }, { status: 500 });
