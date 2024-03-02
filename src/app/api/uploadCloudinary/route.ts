@@ -29,7 +29,7 @@ export async function POST(req: Request) {
           resource = value.toString();
         } else if (key === "name") {
           name = value.toString();
-        } else if (value instanceof File) {
+        } else if (typeof File !== "undefined" && value instanceof File) {
           const file = value;
 
           let bufferData;
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
                 "ExperimentalWarning: buffer.File is an experimental feature. Ignoring..."
               );
             } else {
-              throw e; // re-throw the error if it's not the experimental warning
+              throw new Error("Error"); // Convert unknown type to Error
             }
           }
 
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ uploadedImageUrls }, { status: 200 });
     } catch (e) {
       console.error(e);
-      return NextResponse.json({ error: "error" || "Internal Server Error" }, { status: 500 });
+      return NextResponse.json({ error: "Error" || "Internal Server Error" }, { status: 500 });
     }
   }
 }
