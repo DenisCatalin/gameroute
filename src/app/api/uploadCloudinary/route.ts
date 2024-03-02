@@ -24,29 +24,44 @@ export async function POST(req: Request) {
       let resource = "";
       let name = "";
 
-      if (typeof File !== "undefined") {
-        for (const [key, value] of formDataArray) {
-          if (key === "resource") {
-            resource = value.toString();
-          } else if (key === "name") {
-            name = value.toString();
-          } else if (value instanceof File) {
-            const file = value;
-            const b64 = Buffer.from(await file.arrayBuffer()).toString("base64");
-            let dataURI = "data:" + file.type + ";base64," + b64;
+      for (const [key, value] of formDataArray) {
+        if (key === "resource") {
+          resource = value.toString();
+        } else if (key === "name") {
+          name = value.toString();
+        } else if (value instanceof File) {
+          const file = value;
+
+          let bufferData;
+          try {
+            // Attempt to use experimental feature, handle warning
+            bufferData = Buffer.from(await file.arrayBuffer());
+          } catch (e) {
+            if (e instanceof ReferenceError && e.message.includes("experimental")) {
+              console.warn(
+                "ExperimentalWarning: buffer.File is an experimental feature. Ignoring..."
+              );
+            } else {
+              throw e; // re-throw the error if it's not the experimental warning
+            }
+          }
+
+          // Check if bufferData is available (not affected by experimental warning)
+          if (bufferData) {
+            const b64 = bufferData.toString("base64");
+            const dataURI = "data:" + file.type + ";base64," + b64;
             const uploadedImage = await cloudinary.uploader.upload(dataURI, {
               folder: `Blackwater/${resource}/${name}`,
             });
             uploadedImageUrls.push(uploadedImage.secure_url);
           }
         }
-        return NextResponse.json({ uploadedImageUrls }, { status: 200 });
-      } else {
-        return NextResponse.json({ error: "File object is not defined" }, { status: 500 });
       }
+
+      return NextResponse.json({ uploadedImageUrls }, { status: 200 });
     } catch (e) {
       console.error(e);
-      return NextResponse.json({ e }, { status: 500 });
+      return NextResponse.json({ error: "error" || "Internal Server Error" }, { status: 500 });
     }
   }
 }
