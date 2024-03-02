@@ -142,9 +142,7 @@ const AddLocationPage = () => {
       formData.append("file", image);
     });
     formData.append("resource", resource);
-    formData.append("location", location);
     formData.append("name", form.locationName);
-    formData.append("tag", form.locationName);
     try {
       const response = await axios.post("/api/uploadCloudinary", formData);
       setTimeout(() => {
