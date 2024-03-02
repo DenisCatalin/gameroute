@@ -17,13 +17,12 @@ cloudinary.config({
 
 export async function POST(req: Request) {
   if (req.method === "POST") {
-    const formData = await req.formData();
-    const formDataArray = Array.from(formData);
-    const uploadedImageUrls = [];
-    let resource = "";
-    let name = "";
-
     try {
+      const formData = await req.formData();
+      const formDataArray = Array.from(formData);
+      const uploadedImageUrls = [];
+      let resource = "";
+      let name = "";
       for (const [key, value] of formDataArray) {
         if (key === "resource") {
           resource = value.toString();
@@ -41,6 +40,7 @@ export async function POST(req: Request) {
       }
       return NextResponse.json({ uploadedImageUrls }, { status: 200 });
     } catch (e) {
+      console.error(e);
       return NextResponse.json({ e }, { status: 500 });
     }
   }
