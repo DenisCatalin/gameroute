@@ -16,8 +16,8 @@ type FormProps = {
   locationTag: string;
 };
 
-export const Categories: string[] = ["Scrap", "Statue"];
-export const Locations: string[] = [
+const Categories: string[] = ["Scrap", "Statue"];
+const Locations: string[] = [
   "Calafia",
   "Sawmill",
   "Timber tunnel",
