@@ -34,7 +34,6 @@ export async function POST(req: Request) {
 
           let bufferData;
           try {
-            // Attempt to use experimental feature, handle warning
             bufferData = Buffer.from(await file.arrayBuffer());
           } catch (e) {
             if (e instanceof ReferenceError && e.message.includes("experimental")) {
@@ -42,11 +41,12 @@ export async function POST(req: Request) {
                 "ExperimentalWarning: buffer.File is an experimental feature. Ignoring..."
               );
             } else {
-              throw new Error("Error"); // Convert unknown type to Error
+              throw new Error("Error");
             }
           }
 
-          // Check if bufferData is available (not affected by experimental warning)
+          console.log("bufferData: " + bufferData);
+
           if (bufferData) {
             const b64 = bufferData.toString("base64");
             const dataURI = "data:" + file.type + ";base64," + b64;

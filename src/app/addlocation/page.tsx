@@ -166,6 +166,7 @@ const AddLocationPage = () => {
         );
       }, 50);
       setSelectedImages([]);
+      console.log(imageLinks);
     } catch (error) {
       dispatch(
         setAppSnackbar({
