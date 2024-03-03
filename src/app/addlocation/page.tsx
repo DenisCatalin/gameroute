@@ -10,6 +10,7 @@ import axios from "axios";
 import firebase from "../lib/firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Loading from "../components/Loading";
+import { useRouter } from "next/navigation";
 
 type FormProps = {
   locationName: string;
@@ -45,6 +46,33 @@ const AddLocationPage = () => {
   });
 
   const dispatch = useDispatch();
+  const router = useRouter();
+
+  const user = useSelector((state: any) => state.user);
+
+  useEffect(() => {
+    if (!user.admin) {
+      dispatch(
+        setAppSnackbar({
+          title: "",
+          message: "",
+          open: false,
+        })
+      );
+      setTimeout(() => {
+        dispatch(setLocationToBeAdded(true));
+        dispatch(
+          setAppSnackbar({
+            title: "Error",
+            message: "You are not allowed to access this page",
+            open: true,
+          })
+        );
+      }, 50);
+      router.push("/");
+      return;
+    }
+  }, []);
 
   const firestore = firebase.firestore();
   const locationsRef = firestore.collection(resource.toLocaleLowerCase());
