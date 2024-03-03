@@ -52,6 +52,8 @@ const AddLocationPage = () => {
   //@ts-ignore
   const [locations] = useCollectionData(query, { id: "id" });
 
+  const tagsRef = firestore.collection("tags").doc("uocf8svMHC9Fed8i5yUN");
+
   const onUpload = async () => {
     if (form.locationName === "") {
       dispatch(
@@ -110,7 +112,7 @@ const AddLocationPage = () => {
       });
       return;
     }
-    if (selectedImages.length === 0) {
+    if (selectedImages.length > 3 || selectedImages.length < 1) {
       dispatch(
         setAppSnackbar({
           title: "",
@@ -122,7 +124,8 @@ const AddLocationPage = () => {
         dispatch(
           setAppSnackbar({
             title: "Error",
-            message: "You need to select at least one photo in order to upload a new location",
+            message:
+              "You need to select at least one, but no more that 3 photos in order to upload a new location",
             open: true,
           })
         );
@@ -145,7 +148,6 @@ const AddLocationPage = () => {
     formData.append("name", form.locationName);
     try {
       const response = await axios.post("/api/uploadCloudinary", formData);
-      console.log(response);
       if (response.data.error) {
         dispatch(
           setAppSnackbar({
@@ -210,6 +212,31 @@ const AddLocationPage = () => {
   useEffect(() => {
     (async () => {
       if (locations && imageLinks.length > 0) {
+        tagsRef
+          .get()
+          .then(doc => {
+            if (doc.exists) {
+              const data = doc.data();
+              const tagsArray = data?.tags;
+
+              if (!tagsArray.includes(form.locationTag)) {
+                tagsArray.push(form.locationTag);
+                tagsRef
+                  .update({ tags: tagsArray })
+                  .then(() => {
+                    console.log("Document successfully updated!");
+                  })
+                  .catch(error => {
+                    console.error("Error updating document: ", error);
+                  });
+              }
+            } else {
+              console.log("Document doesn't exist");
+            }
+          })
+          .catch(error => {
+            console.log("Error getting document:", error);
+          });
         try {
           await locationsRef.add({
             id: locations.length + 1,

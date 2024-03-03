@@ -24,9 +24,9 @@ const Locations: string[] = [
   "Behind SAHP",
 ];
 
-const ScrapPage = () => {
+const StatuesPage = () => {
   const firestore = firebase.firestore();
-  const scrapRef = firestore.collection("scrap");
+  const scrapRef = firestore.collection("statue");
   const query = scrapRef.orderBy("id");
   const [listOfTags, setListOfTags] = useState<string[]>([]);
   const [location, setLocation] = useState<string>("All locations");
@@ -66,9 +66,9 @@ const ScrapPage = () => {
       <div className="w-full h-20 mb-6 flex items-center justify-between">
         <div className="w-80 h-20 flex items-center justify-start">
           <div className="w-20 h-20 relative">
-            <OpacityImage src={"/static/scrap.png"} fittment="contain" />
+            <OpacityImage src={"/static/statue.png"} fittment="contain" />
           </div>
-          <h1 className="font-bold text-2xl">SCRAP METAL</h1>
+          <h1 className="font-bold text-2xl">STATUES</h1>
         </div>
         <Select options={listOfTags} value={tag} select={setTag} styles="w-60" />
         <Select options={Locations} value={location} select={setLocation} styles="w-60" />
@@ -89,4 +89,4 @@ const ScrapPage = () => {
   );
 };
 
-export default ScrapPage;
+export default StatuesPage;
