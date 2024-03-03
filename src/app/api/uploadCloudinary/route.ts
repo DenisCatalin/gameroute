@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         const file = value;
         const b64 = Buffer.from(await file.arrayBuffer()).toString("base64");
         let dataURI = "data:" + file.type + ";base64," + b64;
-        const uploadedImage = await cloudinary.uploader.upload(dataURI, {
+        const uploadedImage = await cloudinary.uploader.upload_large(dataURI, {
           folder: `Blackwater/${resource}/${name}`,
         });
         uploadedImageUrls.push(uploadedImage.secure_url);
