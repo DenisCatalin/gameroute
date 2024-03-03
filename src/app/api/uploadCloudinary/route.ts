@@ -27,7 +27,6 @@ export async function POST(req: Request) {
     const uploadedImageUrls = [];
     let resource = "";
     let name = "";
-    let totalSize = 0;
 
     for (const [key, value] of formDataArray) {
       if (key === "resource") {
@@ -38,7 +37,7 @@ export async function POST(req: Request) {
         const file = value;
 
         if (file.size > MAX_FILE_SIZE)
-          return NextResponse.json({ error: "File size limit exceeded" }, { status: 400 });
+          return NextResponse.json({ error: "File size limit exceeded" }, { status: 200 });
 
         const b64 = Buffer.from(await file.arrayBuffer()).toString("base64");
         let dataURI = "data:" + file.type + ";base64," + b64;

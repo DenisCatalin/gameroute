@@ -145,6 +145,7 @@ const AddLocationPage = () => {
     formData.append("name", form.locationName);
     try {
       const response = await axios.post("/api/uploadCloudinary", formData);
+      console.log(response);
       if (response.data.error) {
         dispatch(
           setAppSnackbar({
