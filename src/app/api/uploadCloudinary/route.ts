@@ -1,5 +1,15 @@
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import tinify from "tinify";
+import fs from "fs";
+
+export const dynamic = "auto";
+export const dynamicParams = true;
+export const revalidate = false;
+export const fetchCache = "auto";
+export const runtime = "nodejs";
+export const preferredRegion = "auto";
+export const maxDuration = 5;
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -8,6 +18,8 @@ cloudinary.config({
   secure: true,
 });
 
+const MAX_FILE_SIZE = 4500000; // 4.5MB
+
 export async function POST(req: Request) {
   if (req.method === "POST") {
     const formData = await req.formData();
@@ -15,6 +27,7 @@ export async function POST(req: Request) {
     const uploadedImageUrls = [];
     let resource = "";
     let name = "";
+    let totalSize = 0;
 
     for (const [key, value] of formDataArray) {
       if (key === "resource") {
@@ -24,48 +37,17 @@ export async function POST(req: Request) {
       } else if (value instanceof File) {
         const file = value;
 
-        if (file.size > 5000000) {
-          const fileSize = file.size;
-          const chunkSize = 5000000;
-          let start = 0;
-          let end = Math.min(chunkSize, fileSize);
-          let partNumber = 1;
+        if (file.size > MAX_FILE_SIZE)
+          return NextResponse.json({ error: "File size limit exceeded" }, { status: 400 });
 
-          while (start < fileSize) {
-            const blob = file.slice(start, end);
-            const reader = new FileReader();
-
-            reader.readAsDataURL(blob);
-            reader.onloadend = async () => {
-              const b64Data = reader.result?.toString() || "";
-              const dataURI = "data:" + file.type + ";base64," + b64Data;
-
-              const uploadedImage = await cloudinary.uploader.upload_large(dataURI, {
-                folder: `Blackwater/${resource}/${name}`,
-                partNumber,
-                totalParts: Math.ceil(fileSize / chunkSize),
-              });
-
-              uploadedImageUrls.push(uploadedImage.secure_url);
-
-              if (end < fileSize) {
-                start = end;
-                end = Math.min(start + chunkSize, fileSize);
-                partNumber++;
-              }
-            };
-          }
-        } else {
-          const b64 = Buffer.from(await file.arrayBuffer()).toString("base64");
-          let dataURI = "data:" + file.type + ";base64," + b64;
-          const uploadedImage = await cloudinary.uploader.upload_large(dataURI, {
-            folder: `Blackwater/${resource}/${name}`,
-          });
-          uploadedImageUrls.push(uploadedImage.secure_url);
-        }
+        const b64 = Buffer.from(await file.arrayBuffer()).toString("base64");
+        let dataURI = "data:" + file.type + ";base64," + b64;
+        const uploadedImage = await cloudinary.uploader.upload(dataURI, {
+          folder: `Blackwater/${resource}/${name}`,
+        });
+        uploadedImageUrls.push(uploadedImage.secure_url);
       }
     }
-
     return NextResponse.json({ uploadedImageUrls }, { status: 200 });
   }
 }

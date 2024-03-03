@@ -145,6 +145,27 @@ const AddLocationPage = () => {
     formData.append("name", form.locationName);
     try {
       const response = await axios.post("/api/uploadCloudinary", formData);
+      if (response.data.error) {
+        dispatch(
+          setAppSnackbar({
+            title: "",
+            message: "",
+            open: false,
+          })
+        );
+        setTimeout(() => {
+          dispatch(setLocationToBeAdded(true));
+          dispatch(
+            setAppSnackbar({
+              title: "Error",
+              message: response.data.error,
+              open: true,
+            })
+          );
+        }, 50);
+        setUploadStatus(false);
+        return;
+      }
       setTimeout(() => {
         setImageLinks(response.data.uploadedImageUrls);
       }, 2000);
@@ -166,8 +187,8 @@ const AddLocationPage = () => {
         );
       }, 50);
       setSelectedImages([]);
-      console.log(imageLinks);
     } catch (error) {
+      setUploadStatus(false);
       dispatch(
         setAppSnackbar({
           title: "Error",
@@ -218,6 +239,7 @@ const AddLocationPage = () => {
           }, 50);
         } catch (error) {
           console.log(error);
+          setUploadStatus(false);
           dispatch(
             setAppSnackbar({
               title: "Error",

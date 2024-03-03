@@ -3,9 +3,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import OpacityImage from "../utils/OpacityImage";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { setAppSnackbar, setLocationToBeAdded } from "../redux/app.slice";
 
 type Props = {
   setSelectedImages: any;
