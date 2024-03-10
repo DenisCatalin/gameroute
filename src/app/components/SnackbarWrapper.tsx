@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Snackbar from "../interface/Snackbar";
 import { useDispatch, useSelector } from "react-redux";
 import { setAppSnackbar } from "../redux/app.slice";

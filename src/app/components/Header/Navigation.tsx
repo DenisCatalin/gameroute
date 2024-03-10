@@ -55,7 +55,9 @@ const Navigation = () => {
           <li
             key={index}
             className={`flex justify-center items-center w-auto px-4 rounded-regular h-12 transition text-dark focus:bg-main dark:text-light hover:bg-main hover:text-light ${
-              link.content === currentPage ? "bg-main text-light" : ""
+              link.content === currentPage
+                ? "bg-main text-light shadow-productLightShadow dark:shadow-productDarkShadow"
+                : ""
             }`}
           >
             {link.content.toUpperCase()}

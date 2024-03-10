@@ -1,16 +1,16 @@
 "use client";
 
 import React, { ChangeEvent, useEffect, useState } from "react";
-import AddGallery from "./AddGallery";
+import AddLocation from "./AddLocation";
 import Input from "../interface/Input";
 import Select from "../interface/Select";
 import { useSelector, useDispatch } from "react-redux";
-import { setAppSnackbar, setLocationToBeAdded } from "../redux/app.slice";
 import axios from "axios";
 import firebase from "../lib/firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation";
+import useSnackbar from "../hooks/useSnackbar";
 
 type FormProps = {
   locationName: string;
@@ -49,26 +49,12 @@ const AddLocationPage = () => {
   const router = useRouter();
 
   const user = useSelector((state: any) => state.user);
+  const { showSnackbar, hideSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (!user.admin) {
-      dispatch(
-        setAppSnackbar({
-          title: "",
-          message: "",
-          open: false,
-        })
-      );
-      setTimeout(() => {
-        dispatch(setLocationToBeAdded(true));
-        dispatch(
-          setAppSnackbar({
-            title: "Error",
-            message: "You are not allowed to access this page",
-            open: true,
-          })
-        );
-      }, 50);
+      hideSnackbar();
+      showSnackbar("Error", "You are not allowed to access this page");
       router.push("/");
       return;
     }
@@ -84,90 +70,31 @@ const AddLocationPage = () => {
 
   const onUpload = async () => {
     if (form.locationName === "") {
-      dispatch(
-        setAppSnackbar({
-          title: "",
-          message: "",
-          open: false,
-        })
-      );
-      setTimeout(() => {
-        dispatch(
-          setAppSnackbar({
-            title: "Error",
-            message: "You need to name the location in order to upload a new location",
-            open: true,
-          })
-        );
-      }, 50);
+      hideSnackbar();
+      showSnackbar("Error", "You need to name the location in order to upload a new location");
       return;
     }
     if (resource === "Select the resource") {
-      dispatch(
-        setAppSnackbar({
-          title: "",
-          message: "",
-          open: false,
-        })
-      );
-      setTimeout(() => {
-        dispatch(
-          setAppSnackbar({
-            title: "Error",
-            message: "You need to select the resource in order to upload a new location",
-            open: true,
-          })
-        );
-      }, 50);
+      hideSnackbar();
+      showSnackbar("Error", "You need to select the resource in order to upload a new location");
       return;
     }
     if (location === "Select a location") {
-      dispatch(
-        setAppSnackbar({
-          title: "",
-          message: "",
-          open: false,
-        })
-      );
-      setTimeout(() => {
-        dispatch(
-          setAppSnackbar({
-            title: "Error",
-            message: "You need to select a location in order to upload a new location",
-            open: true,
-          })
-        );
-      });
+      hideSnackbar();
+      showSnackbar("Error", "You need to select a location in order to upload a new location");
       return;
     }
     if (selectedImages.length > 3 || selectedImages.length < 1) {
-      dispatch(
-        setAppSnackbar({
-          title: "",
-          message: "",
-          open: false,
-        })
+      hideSnackbar();
+      showSnackbar(
+        "Error",
+        "You need to select at least one, but no more that 3 photos in order to upload a new location"
       );
-      setTimeout(() => {
-        dispatch(
-          setAppSnackbar({
-            title: "Error",
-            message:
-              "You need to select at least one, but no more that 3 photos in order to upload a new location",
-            open: true,
-          })
-        );
-      });
       return;
     }
     setUploadStatus(true);
-    dispatch(
-      setAppSnackbar({
-        title: "Notification",
-        message: "Your images are uploading ...",
-        open: true,
-      })
-    );
+    hideSnackbar();
+    showSnackbar("Notification", "Your images are uploading ...");
     const formData = new FormData();
     selectedImages.forEach((image: any) => {
       formData.append("file", image);
@@ -177,56 +104,21 @@ const AddLocationPage = () => {
     try {
       const response = await axios.post("/api/uploadCloudinary", formData);
       if (response.data.error) {
-        dispatch(
-          setAppSnackbar({
-            title: "",
-            message: "",
-            open: false,
-          })
-        );
-        setTimeout(() => {
-          dispatch(setLocationToBeAdded(true));
-          dispatch(
-            setAppSnackbar({
-              title: "Error",
-              message: response.data.error,
-              open: true,
-            })
-          );
-        }, 50);
+        hideSnackbar();
+        showSnackbar("Error", response.data.error);
         setUploadStatus(false);
         return;
       }
       setTimeout(() => {
         setImageLinks(response.data.uploadedImageUrls);
       }, 2000);
-      dispatch(
-        setAppSnackbar({
-          title: "",
-          message: "",
-          open: false,
-        })
-      );
-      setTimeout(() => {
-        dispatch(setLocationToBeAdded(true));
-        dispatch(
-          setAppSnackbar({
-            title: "Success",
-            message: "Your images have been successfully uploaded to the cloud",
-            open: true,
-          })
-        );
-      }, 50);
+      hideSnackbar();
+      showSnackbar("Success", "Your images have been successfully uploaded to the cloud");
       setSelectedImages([]);
     } catch (error) {
       setUploadStatus(false);
-      dispatch(
-        setAppSnackbar({
-          title: "Error",
-          message: "Upload failed",
-          open: true,
-        })
-      );
+      hideSnackbar();
+      showSnackbar("Error", "Upload failed");
     }
   };
 
@@ -240,31 +132,33 @@ const AddLocationPage = () => {
   useEffect(() => {
     (async () => {
       if (locations && imageLinks.length > 0) {
-        tagsRef
-          .get()
-          .then(doc => {
-            if (doc.exists) {
-              const data = doc.data();
-              const tagsArray = data?.tags;
+        if (form.locationTag !== "") {
+          tagsRef
+            .get()
+            .then(doc => {
+              if (doc.exists) {
+                const data = doc.data();
+                const tagsArray = data?.tags;
 
-              if (!tagsArray.includes(form.locationTag)) {
-                tagsArray.push(form.locationTag);
-                tagsRef
-                  .update({ tags: tagsArray })
-                  .then(() => {
-                    console.log("Document successfully updated!");
-                  })
-                  .catch(error => {
-                    console.error("Error updating document: ", error);
-                  });
+                if (!tagsArray.includes(form.locationTag)) {
+                  tagsArray.push(form.locationTag);
+                  tagsRef
+                    .update({ tags: tagsArray })
+                    .then(() => {
+                      console.log("Document successfully updated!");
+                    })
+                    .catch(error => {
+                      console.error("Error updating document: ", error);
+                    });
+                }
+              } else {
+                console.log("Document doesn't exist");
               }
-            } else {
-              console.log("Document doesn't exist");
-            }
-          })
-          .catch(error => {
-            console.log("Error getting document:", error);
-          });
+            })
+            .catch(error => {
+              console.log("Error getting document:", error);
+            });
+        }
         try {
           await locationsRef.add({
             id: locations.length + 1,
@@ -276,33 +170,13 @@ const AddLocationPage = () => {
             gallery: imageLinks,
           });
           setUploadStatus(false);
-          dispatch(
-            setAppSnackbar({
-              title: "",
-              message: "",
-              open: false,
-            })
-          );
-          setTimeout(() => {
-            dispatch(setLocationToBeAdded(true));
-            dispatch(
-              setAppSnackbar({
-                title: "Success",
-                message: "Location added successfully",
-                open: true,
-              })
-            );
-          }, 50);
+          hideSnackbar();
+          showSnackbar("Success", "Location added successfully");
         } catch (error) {
           console.log(error);
           setUploadStatus(false);
-          dispatch(
-            setAppSnackbar({
-              title: "Error",
-              message: "Upload to firebase failed",
-              open: true,
-            })
-          );
+          hideSnackbar();
+          showSnackbar("Error", "Upload to firebase failed");
         }
       }
     })();
@@ -335,7 +209,7 @@ const AddLocationPage = () => {
             <Select options={Locations} value={location} select={setLocation} />
           </div>
         </div>
-        <AddGallery setSelectedImages={setSelectedImages} selectedImages={selectedImages} />
+        <AddLocation setSelectedImages={setSelectedImages} selectedImages={selectedImages} />
       </div>
       <button
         onClick={onUpload}

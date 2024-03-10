@@ -10,13 +10,16 @@ import {
 import OpacityImage from "../utils/OpacityImage";
 import { useSelector, useDispatch } from "react-redux";
 import { setShowGallery } from "../redux/app.slice";
+import { useRouter } from "next/navigation";
 
 const GalleryWrapper = () => {
   const gallery = useSelector((state: any) => state.app.gallery);
   const showGallery = useSelector((state: any) => state.app.showGallery);
   const dispatch = useDispatch();
+  const router = useRouter();
   const handleCloseGallery = () => {
     dispatch(setShowGallery(false));
+    router.back();
   };
   return (
     <>

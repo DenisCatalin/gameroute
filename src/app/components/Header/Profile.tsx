@@ -6,6 +6,7 @@ import { FaMoon } from "react-icons/fa";
 import { MdDesktopWindows, MdContacts } from "react-icons/md";
 import { BsCollectionFill } from "react-icons/bs";
 import { MdLogout } from "react-icons/md";
+import { CiLogin } from "react-icons/ci";
 import Dropdown from "@/app/interface/Dropdown/Dropdown";
 import { useRouter } from "next/navigation";
 import { HiDocumentAdd } from "react-icons/hi";
@@ -111,6 +112,28 @@ const Profile = () => {
               </>
             ),
             onClick: () => router.push("/addlocation"),
+          },
+          {
+            content: "Edit location",
+            icon: (
+              <>
+                {theme === "dark" ? (
+                  <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />
+                ) : (
+                  <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />
+                )}
+              </>
+            ),
+            activeIcon: (
+              <>
+                {theme === "dark" ? (
+                  <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
+                ) : (
+                  <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
+                )}
+              </>
+            ),
+            onClick: () => router.push("/editlocation"),
           },
         ]
       : []),
@@ -259,7 +282,13 @@ const Profile = () => {
           responsive={true}
         />
       ) : (
-        <button onClick={signIn}>Sign In</button>
+        <button
+          onClick={signIn}
+          className="w-24 h-12 bg-offLight rounded-regular font-bold flex items-center justify-between px-2 text-dark dark:text-light transition hover:shadow-headerLightShadow dark:hover:shadow-headerDarkShadow"
+        >
+          <CiLogin className="w-5 h-5 text-main" />
+          Sign In
+        </button>
       )}
     </div>
   );

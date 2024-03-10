@@ -9,7 +9,7 @@ type Props = {
   selectedImages: any;
 };
 
-const AddGallery = ({ setSelectedImages, selectedImages }: Props) => {
+const AddLocation = ({ setSelectedImages, selectedImages }: Props) => {
   const onDrop = useCallback((acceptedFiles: any, _rejectedFiles: any) => {
     acceptedFiles.forEach((file: any) => {
       setSelectedImages((prevState: any) => [...prevState, file]);
@@ -61,4 +61,4 @@ const AddGallery = ({ setSelectedImages, selectedImages }: Props) => {
   );
 };
 
-export default AddGallery;
+export default AddLocation;

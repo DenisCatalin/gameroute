@@ -9,6 +9,7 @@ export type AppState = {
   locationToBeAdded: boolean;
   showGallery: boolean;
   gallery: string[];
+  watchingDocID: string;
 };
 
 const initialState: AppState = {
@@ -18,6 +19,7 @@ const initialState: AppState = {
   locationToBeAdded: false,
   gallery: [],
   showGallery: false,
+  watchingDocID: "",
   snackbar: {
     title: "",
     message: "",
@@ -55,6 +57,9 @@ export const appSlice = createSlice({
     setShowGallery(state: any, action: PayloadAction<boolean>) {
       state.showGallery = action.payload;
     },
+    setWatchingDocID(state: any, action: PayloadAction<string>) {
+      state.watchingDocID = action.payload;
+    },
   },
 });
 
@@ -67,5 +72,6 @@ export const {
   setLocationToBeAdded,
   setAppGallery,
   setShowGallery,
+  setWatchingDocID,
 } = appSlice.actions;
 export const appReducer = appSlice.reducer;
