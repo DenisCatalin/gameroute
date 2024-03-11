@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
-import tinify from "tinify";
-import fs from "fs";
 
 export const dynamic = "auto";
 export const dynamicParams = true;

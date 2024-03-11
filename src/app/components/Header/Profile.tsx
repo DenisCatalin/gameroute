@@ -14,9 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserAdminState, setUserDataState, setUserLoggedState } from "@/app/redux/user.slice";
 import firebase from "../../lib/firebase";
 import OpacityImage from "@/app/utils/OpacityImage";
+import axios from "axios";
 
 const Profile = () => {
   const [theme, setTheme] = useState<string>("System");
+  const [checkingAuth, setCheckingAuth] = useState<boolean>(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -34,6 +36,56 @@ const Profile = () => {
   const auth = getAuth();
   const userRedux = useSelector((state: any) => state.user);
 
+  const checkAuth = async () => {
+    try {
+      const res = await axios.get("/api/checkToken");
+      if (res.data.message === "No token") return;
+      if (res.data.message === "Token expired") {
+        dispatch(
+          setUserDataState({
+            uid: "",
+            displayName: "",
+            email: "",
+            photoURL: "photoURL",
+          })
+        );
+        dispatch(setUserLoggedState(false));
+        dispatch(setUserAdminState(false));
+        setCheckingAuth(false);
+        return;
+      }
+      const { uid, admin, photoURL, email, displayName } = res.data.token.data;
+      dispatch(
+        setUserDataState({
+          uid: uid,
+          displayName: displayName,
+          email: email,
+          photoURL: photoURL,
+        })
+      );
+      dispatch(setUserLoggedState(true));
+      dispatch(setUserAdminState(admin));
+      setCheckingAuth(false);
+    } catch (error) {
+      console.error("Error checking authentication:", error);
+    }
+  };
+
+  const setToken = async (data: any) => {
+    try {
+      await axios.post("/api/setToken", {
+        data,
+      });
+    } catch (error) {
+      console.error("Error setting token:", error);
+    }
+  };
+
+  useEffect(() => {
+    checkAuth();
+    setCheckingAuth(true);
+  }, []);
+
   const signIn = async () => {
     if (userRedux.logged) {
       return;
@@ -50,6 +102,13 @@ const Profile = () => {
       if (userDoc.exists) {
         const data = userDoc.data();
         if (data) {
+          setToken({
+            uid: data.uid,
+            displayName: data.displayName,
+            email: data.email,
+            photoURL: data.photoURL,
+            admin: data.admin,
+          });
           dispatch(
             setUserDataState({
               uid: data.uid,
@@ -184,7 +243,12 @@ const Profile = () => {
       ) : (
         <button
           onClick={signIn}
-          className="w-24 h-12 bg-offLight rounded-regular font-bold flex items-center justify-between px-2 text-dark dark:text-light transition hover:shadow-headerLightShadow dark:hover:shadow-headerDarkShadow"
+          disabled={checkingAuth}
+          className={`w-24 h-12 bg-offLight rounded-regular font-bold flex items-center justify-between px-2 text-dark dark:text-light transition ${
+            checkingAuth
+              ? ""
+              : "hover:shadow-headerLightShadow dark:hover:shadow-headerDarkShadow opacity-100"
+          }`}
         >
           <CiLogin className="w-5 h-5 text-main" />
           Sign In
