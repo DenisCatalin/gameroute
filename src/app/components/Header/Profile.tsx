@@ -39,7 +39,10 @@ const Profile = () => {
   const checkAuth = async () => {
     try {
       const res = await axios.get("/api/checkToken");
-      if (res.data.message === "No token") return;
+      if (res.data.message === "No token") {
+        setCheckingAuth(false);
+        return;
+      }
       if (res.data.message === "Token expired") {
         dispatch(
           setUserDataState({

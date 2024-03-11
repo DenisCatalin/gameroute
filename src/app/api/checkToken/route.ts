@@ -1,7 +1,7 @@
 import { verifyToken } from "@/app/lib/verifyToken";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 
 export const dynamic = "auto";
 export const dynamicParams = true;
