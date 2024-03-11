@@ -93,167 +93,61 @@ const Profile = () => {
       ? [
           {
             content: "Add location",
-            icon: (
-              <>
-                {theme === "dark" ? (
-                  <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />
-                ) : (
-                  <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />
-                )}
-              </>
-            ),
-            activeIcon: (
-              <>
-                {theme === "dark" ? (
-                  <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-                ) : (
-                  <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-                )}
-              </>
-            ),
+            icon: <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />,
+            activeIcon: <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
             onClick: () => router.push("/addlocation"),
           },
           {
             content: "Edit location",
-            icon: (
-              <>
-                {theme === "dark" ? (
-                  <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />
-                ) : (
-                  <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />
-                )}
-              </>
-            ),
-            activeIcon: (
-              <>
-                {theme === "dark" ? (
-                  <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-                ) : (
-                  <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-                )}
-              </>
-            ),
+            icon: <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />,
+            activeIcon: <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
             onClick: () => router.push("/editlocation"),
           },
         ]
       : []),
     {
       content: `Switch theme: ${theme.charAt(0).toUpperCase() + theme.slice(1)}`,
-      icon: (
-        <>
-          {theme === "dark" ? (
-            <FaMoon className="mr-2 h-5 w-5" aria-hidden="true" />
-          ) : "light" ? (
-            <FaSun className="mr-2 h-5 w-5" aria-hidden="true" />
-          ) : (
-            <MdDesktopWindows className="mr-2 h-5 w-5" aria-hidden="true" />
-          )}
-        </>
-      ),
-      activeIcon: (
-        <>
-          {theme === "dark" ? (
-            <FaMoon className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          ) : "light" ? (
-            <FaSun className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          ) : (
-            <MdDesktopWindows className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          )}
-        </>
-      ),
+      icon:
+        theme === "dark" ? (
+          <FaMoon className="mr-2 h-5 w-5" aria-hidden="true" />
+        ) : (
+          <FaSun className="mr-2 h-5 w-5" aria-hidden="true" />
+        ),
+      activeIcon:
+        theme === "dark" ? (
+          <FaMoon className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
+        ) : (
+          <FaSun className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
+        ),
       onClick: () => changeTheme(),
     },
     {
       content: "Sign out",
       onClick: () => signOut(),
-      icon: (
-        <>
-          {theme === "dark" ? (
-            <MdLogout className="mr-2 h-5 w-5" aria-hidden="true" />
-          ) : (
-            <MdLogout className="mr-2 h-5 w-5" aria-hidden="true" />
-          )}
-        </>
-      ),
-      activeIcon: (
-        <>
-          {theme === "dark" ? (
-            <MdLogout className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          ) : (
-            <MdLogout className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          )}
-        </>
-      ),
+      icon: <MdLogout className="mr-2 h-5 w-5" aria-hidden="true" />,
+      activeIcon: <MdLogout className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
     },
   ];
 
   const MenuLinks = [
     {
       content: "HOME",
-      icon: (
-        <>
-          {theme === "dark" ? (
-            <FaHouse className="mr-2 h-5 w-5" aria-hidden="true" />
-          ) : (
-            <FaHouse className="mr-2 h-5 w-5" aria-hidden="true" />
-          )}
-        </>
-      ),
-      activeIcon: (
-        <>
-          {theme === "dark" ? (
-            <FaHouse className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          ) : (
-            <FaHouse className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          )}
-        </>
-      ),
+      icon: <FaHouse className="mr-2 h-5 w-5" aria-hidden="true" />,
+      activeIcon: <FaHouse className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
       isLink: true,
       linkTo: "/",
     },
     {
       content: "SCRAP",
-      icon: (
-        <>
-          {theme === "dark" ? (
-            <BsCollectionFill className="mr-2 h-5 w-5" aria-hidden="true" />
-          ) : (
-            <BsCollectionFill className="mr-2 h-5 w-5" aria-hidden="true" />
-          )}
-        </>
-      ),
-      activeIcon: (
-        <>
-          {theme === "dark" ? (
-            <BsCollectionFill className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          ) : (
-            <BsCollectionFill className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          )}
-        </>
-      ),
+      icon: <BsCollectionFill className="mr-2 h-5 w-5" aria-hidden="true" />,
+      activeIcon: <BsCollectionFill className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
       isLink: true,
       linkTo: "/scrap",
     },
     {
       content: "STATUES",
-      icon: (
-        <>
-          {theme === "dark" ? (
-            <MdContacts className="mr-2 h-5 w-5" aria-hidden="true" />
-          ) : (
-            <MdContacts className="mr-2 h-5 w-5" aria-hidden="true" />
-          )}
-        </>
-      ),
-      activeIcon: (
-        <>
-          {theme === "dark" ? (
-            <MdContacts className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          ) : (
-            <MdContacts className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />
-          )}
-        </>
-      ),
+      icon: <MdContacts className="mr-2 h-5 w-5" aria-hidden="true" />,
+      activeIcon: <MdContacts className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
       isLink: true,
       linkTo: "/statues",
     },

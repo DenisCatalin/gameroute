@@ -4,7 +4,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import AddLocation from "./AddLocation";
 import Input from "../interface/Input";
 import Select from "../interface/Select";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import firebase from "../lib/firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -45,15 +45,13 @@ const AddLocationPage = () => {
     locationTag: "",
   });
 
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const user = useSelector((state: any) => state.user);
-  const { showSnackbar, hideSnackbar } = useSnackbar();
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (!user.admin) {
-      hideSnackbar();
       showSnackbar("Error", "You are not allowed to access this page");
       router.push("/");
       return;
@@ -70,30 +68,24 @@ const AddLocationPage = () => {
 
   const onUpload = async () => {
     if (form.locationName === "") {
-      hideSnackbar();
       showSnackbar("Error", "You need to name the location in order to upload a new location");
       return;
     }
-    if (resource === "Select the resource") {
-      hideSnackbar();
-      showSnackbar("Error", "You need to select the resource in order to upload a new location");
-      return;
-    }
-    if (location === "Select a location") {
-      hideSnackbar();
-      showSnackbar("Error", "You need to select a location in order to upload a new location");
-      return;
-    }
-    if (selectedImages.length > 3 || selectedImages.length < 1) {
-      hideSnackbar();
+    if (resource === "Select the resource" || location === "Select a location") {
       showSnackbar(
         "Error",
-        "You need to select at least one, but no more that 3 photos in order to upload a new location"
+        "You need to select both the resource and location in order to upload a new location"
+      );
+      return;
+    }
+    if (selectedImages.length < 1 || selectedImages.length > 3) {
+      showSnackbar(
+        "Error",
+        "You need to select at least one, but no more than 3 photos in order to upload a new location"
       );
       return;
     }
     setUploadStatus(true);
-    hideSnackbar();
     showSnackbar("Notification", "Your images are uploading ...");
     const formData = new FormData();
     selectedImages.forEach((image: any) => {
@@ -104,7 +96,6 @@ const AddLocationPage = () => {
     try {
       const response = await axios.post("/api/uploadCloudinary", formData);
       if (response.data.error) {
-        hideSnackbar();
         showSnackbar("Error", response.data.error);
         setUploadStatus(false);
         return;
@@ -112,12 +103,10 @@ const AddLocationPage = () => {
       setTimeout(() => {
         setImageLinks(response.data.uploadedImageUrls);
       }, 2000);
-      hideSnackbar();
       showSnackbar("Success", "Your images have been successfully uploaded to the cloud");
       setSelectedImages([]);
     } catch (error) {
       setUploadStatus(false);
-      hideSnackbar();
       showSnackbar("Error", "Upload failed");
     }
   };
@@ -130,56 +119,49 @@ const AddLocationPage = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      if (locations && imageLinks.length > 0) {
-        if (form.locationTag !== "") {
-          tagsRef
-            .get()
-            .then(doc => {
-              if (doc.exists) {
-                const data = doc.data();
-                const tagsArray = data?.tags;
+    const addLocation = async () => {
+      if (!locations || imageLinks.length === 0) return;
 
-                if (!tagsArray.includes(form.locationTag)) {
-                  tagsArray.push(form.locationTag);
-                  tagsRef
-                    .update({ tags: tagsArray })
-                    .then(() => {
-                      console.log("Document successfully updated!");
-                    })
-                    .catch(error => {
-                      console.error("Error updating document: ", error);
-                    });
-                }
-              } else {
-                console.log("Document doesn't exist");
-              }
-            })
-            .catch(error => {
-              console.log("Error getting document:", error);
-            });
-        }
+      if (form.locationTag !== "") {
         try {
-          await locationsRef.add({
-            id: locations.length + 1,
-            locationName: form.locationName,
-            locationTag: form.locationTag,
-            resource: resource,
-            location: location,
-            thumbnailUrl: imageLinks[0],
-            gallery: imageLinks,
-          });
-          setUploadStatus(false);
-          hideSnackbar();
-          showSnackbar("Success", "Location added successfully");
+          const doc = await tagsRef.get();
+          if (doc.exists) {
+            const data = doc.data();
+            const tagsArray = data?.tags || [];
+
+            if (!tagsArray.includes(form.locationTag)) {
+              tagsArray.push(form.locationTag);
+              await tagsRef.update({ tags: tagsArray });
+              console.log("Document successfully updated!");
+            }
+          } else {
+            console.log("Document doesn't exist");
+          }
         } catch (error) {
-          console.log(error);
-          setUploadStatus(false);
-          hideSnackbar();
-          showSnackbar("Error", "Upload to firebase failed");
+          console.error("Error getting document:", error);
         }
       }
-    })();
+
+      try {
+        await locationsRef.add({
+          id: locations.length + 1,
+          locationName: form.locationName,
+          locationTag: form.locationTag,
+          resource: resource,
+          location: location,
+          thumbnailUrl: imageLinks[0],
+          gallery: imageLinks,
+        });
+        setUploadStatus(false);
+        showSnackbar("Success", "Location added successfully");
+      } catch (error) {
+        console.error(error);
+        setUploadStatus(false);
+        showSnackbar("Error", "Upload to Firebase failed");
+      }
+    };
+
+    addLocation();
   }, [imageLinks]);
 
   return (

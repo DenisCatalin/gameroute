@@ -12,7 +12,7 @@ import useSnackbar from "../hooks/useSnackbar";
 const EditLocationPage = () => {
   const [locationName, setLocationName] = useState<string>("");
 
-  const { showSnackbar, hideSnackbar } = useSnackbar();
+  const { showSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -21,7 +21,6 @@ const EditLocationPage = () => {
 
   useEffect(() => {
     if (!user.admin) {
-      hideSnackbar();
       showSnackbar("Error", "You are not allowed to access this page");
       router.push("/");
       return;

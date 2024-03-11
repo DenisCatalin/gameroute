@@ -7,6 +7,7 @@ const useSnackbar = () => {
 
   const showSnackbar = useCallback(
     (title: "Error" | "Success" | "Warning" | "Notification" | "", message: string) => {
+      hideSnackbar();
       setTimeout(() => {
         dispatch(
           setAppSnackbar({

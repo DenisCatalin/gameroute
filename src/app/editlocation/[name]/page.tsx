@@ -41,7 +41,7 @@ const EditLocationPage = () => {
   const edit: EditState = useSelector((state: any) => state.edit);
   const { documentData } = edit;
 
-  const { showSnackbar, hideSnackbar } = useSnackbar();
+  const { showSnackbar } = useSnackbar();
 
   const [resource, setCategory] = useState(
     documentData.resource ? documentData.resource : "Select a resource"
@@ -62,7 +62,6 @@ const EditLocationPage = () => {
 
   useEffect(() => {
     if (!user.admin) {
-      hideSnackbar();
       showSnackbar("Error", "You are not allowed to access this page");
       router.push("/");
       return;
@@ -79,7 +78,6 @@ const EditLocationPage = () => {
 
   const onEdit = async () => {
     setUploadStatus(true);
-    hideSnackbar();
     showSnackbar("Notification", "The location is being edited ...");
     if (selectedImages && selectedImages.length > 0) {
       await uploadToCloudinary();
@@ -98,7 +96,6 @@ const EditLocationPage = () => {
     try {
       const response = await axios.post("/api/uploadCloudinary", formData);
       if (response.data.error) {
-        hideSnackbar();
         showSnackbar("Error", response.data.error);
         setUploadStatus(false);
         return;
@@ -106,12 +103,10 @@ const EditLocationPage = () => {
       setTimeout(() => {
         setImageLinks([...imageLinks, ...response.data.uploadedImageUrls]);
       }, 2000);
-      hideSnackbar();
       showSnackbar("Success", "Your images have been successfully uploaded to the cloud");
       setSelectedImages([]);
     } catch (error) {
       setUploadStatus(false);
-      hideSnackbar();
       showSnackbar("Error", "Upload failed");
     }
   };
@@ -164,12 +159,10 @@ const EditLocationPage = () => {
           });
         }
         setUploadStatus(false);
-        hideSnackbar();
         showSnackbar("Success", "Location edited successfully");
       } catch (error) {
         console.log(error);
         setUploadStatus(false);
-        hideSnackbar();
         showSnackbar("Error", "Upload to firebase failed");
       }
     }
@@ -188,12 +181,10 @@ const EditLocationPage = () => {
 
       await docRef.delete();
 
-      hideSnackbar();
       showSnackbar("Success", "Location deleted successfully");
       router.push("/");
     } catch (error) {
       console.error("Error removing document: ", error);
-      hideSnackbar();
       showSnackbar("Error", "Error deliting the location");
     }
   };
