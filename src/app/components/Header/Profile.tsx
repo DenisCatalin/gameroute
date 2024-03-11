@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { FaSun, FaHouse } from "react-icons/fa6";
 import { FaMoon } from "react-icons/fa";
-import { MdDesktopWindows, MdContacts } from "react-icons/md";
-import { BsCollectionFill } from "react-icons/bs";
 import { MdLogout } from "react-icons/md";
 import { CiLogin } from "react-icons/ci";
 import Dropdown from "@/app/interface/Dropdown/Dropdown";
 import { useRouter } from "next/navigation";
 import { HiDocumentAdd } from "react-icons/hi";
+import { GiColombianStatue, GiMetalGolemHead, GiTreasureMap } from "react-icons/gi";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserAdminState, setUserDataState, setUserLoggedState } from "@/app/redux/user.slice";
@@ -139,17 +138,24 @@ const Profile = () => {
     },
     {
       content: "SCRAP",
-      icon: <BsCollectionFill className="mr-2 h-5 w-5" aria-hidden="true" />,
-      activeIcon: <BsCollectionFill className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
+      icon: <GiMetalGolemHead className="mr-2 h-5 w-5" aria-hidden="true" />,
+      activeIcon: <GiMetalGolemHead className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
       isLink: true,
-      linkTo: "/scrap",
+      linkTo: "/resources/scrap",
     },
     {
       content: "STATUES",
-      icon: <MdContacts className="mr-2 h-5 w-5" aria-hidden="true" />,
-      activeIcon: <MdContacts className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
+      icon: <GiColombianStatue className="mr-2 h-5 w-5" aria-hidden="true" />,
+      activeIcon: <GiColombianStatue className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
       isLink: true,
-      linkTo: "/statues",
+      linkTo: "/resources/statues",
+    },
+    {
+      content: "TREASURES",
+      icon: <GiTreasureMap className="mr-2 h-5 w-5" aria-hidden="true" />,
+      activeIcon: <GiTreasureMap className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
+      isLink: true,
+      linkTo: "/resources/treasures",
     },
   ];
 

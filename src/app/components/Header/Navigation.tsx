@@ -18,11 +18,15 @@ const NavLinks: LinkProps[] = [
   },
   {
     content: "scrap",
-    linkTo: "/scrap",
+    linkTo: "/resources/scrap",
   },
   {
     content: "statues",
-    linkTo: "/statues",
+    linkTo: "/resources/statues",
+  },
+  {
+    content: "treasures",
+    linkTo: "/resources/treasures",
   },
 ];
 
@@ -43,8 +47,11 @@ const Navigation = () => {
   }, []);
 
   const currentPage = useSelector((state: any) => state.app.currentPage);
+  const prefix = currentPage.includes("resources")
+    ? currentPage.split("resources")[1]
+    : currentPage;
   return (
-    <ul className="2xsm:hidden lg:flex w-100percent h-3/4 justify-evenly items-center">
+    <ul className="2xsm:hidden lg:flex w-128 h-3/4 justify-evenly items-center">
       {NavLinks.map((link, index) => (
         <Link
           className="font-bold text-xl"
@@ -55,7 +62,7 @@ const Navigation = () => {
           <li
             key={index}
             className={`flex justify-center items-center w-auto px-4 rounded-regular h-12 transition text-dark focus:bg-main dark:text-light hover:bg-main hover:text-light ${
-              link.content === currentPage
+              link.content === prefix
                 ? "bg-main text-light shadow-productLightShadow dark:shadow-productDarkShadow"
                 : ""
             }`}

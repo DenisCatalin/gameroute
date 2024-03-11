@@ -1,10 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import firebase from "../lib/firebase";
-import Card from "../components/Card";
-import OpacityImage from "../utils/OpacityImage";
-import Select from "../interface/Select";
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import useSnackbar from "@/app/hooks/useSnackbar";
+import { acceptedRouteNames } from "@/app/utils/constants";
+import firebase from "../../lib/firebase";
+import Card from "../../components/Card";
+import OpacityImage from "../../utils/OpacityImage";
+import Select from "../../interface/Select";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 const Locations: string[] = [
@@ -24,9 +27,13 @@ const Locations: string[] = [
   "Behind SAHP",
 ];
 
-const StatuesPage = () => {
+const ResourcesPage = () => {
+  const params = useParams<{ resource: string }>();
+  const router = useRouter();
+  const { showSnackbar } = useSnackbar();
+
   const firestore = firebase.firestore();
-  const scrapRef = firestore.collection("statue");
+  const scrapRef = firestore.collection(params.resource.toLocaleLowerCase());
   const query = scrapRef.orderBy("id");
   const [listOfTags, setListOfTags] = useState<string[]>([]);
   const [location, setLocation] = useState<string>("All locations");
@@ -61,14 +68,24 @@ const StatuesPage = () => {
       : tag === "All tags"
       ? locations?.filter((item: any) => item.location === location)
       : locations?.filter((item: any) => item.location === location && item.locationTag === tag);
+
+  useEffect(() => {
+    if (!acceptedRouteNames.includes(params.resource)) {
+      router.push("/");
+      showSnackbar(
+        "Error",
+        "This is not a valid route for resources page. You have been redirected to the homepage"
+      );
+    }
+  }, []);
   return (
     <div className="w-full min-h-80dvh flex flex-col items-center justify-center p-4">
       <div className="w-full h-20 mb-6 flex items-center justify-between">
         <div className="w-80 h-20 flex items-center justify-start">
           <div className="w-20 h-20 relative">
-            <OpacityImage src={"/static/statue.png"} fittment="contain" />
+            <OpacityImage src={`/static/${params.resource}.png`} fittment="contain" />
           </div>
-          <h1 className="font-bold text-2xl">STATUES</h1>
+          <h1 className="font-bold text-2xl">{params.resource.toUpperCase()}</h1>
         </div>
         <Select options={listOfTags} value={tag} select={setTag} styles="w-60" />
         <Select options={Locations} value={location} select={setLocation} styles="w-60" />
@@ -81,6 +98,7 @@ const StatuesPage = () => {
                 thumbnail={location.thumbnailUrl}
                 name={location.locationName}
                 gallery={location.gallery}
+                resource={params.resource}
               />
             </React.Fragment>
           ))}
@@ -89,4 +107,4 @@ const StatuesPage = () => {
   );
 };
 
-export default StatuesPage;
+export default ResourcesPage;
