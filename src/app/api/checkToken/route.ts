@@ -16,6 +16,7 @@ export async function GET(req: Request) {
     const cookieStore = cookies();
     if (cookieStore.get("token")) {
       const token = await verifyToken(cookieStore.get("token")?.value);
+      //@ts-ignore
       if (token?.exp > Date.now() / 1000) {
         return NextResponse.json({ token }, { status: 200 });
       } else {
