@@ -7,16 +7,17 @@ import { useRouter } from "next/navigation";
 type CardProps = {
   thumbnail: string;
   name: string;
+  resource: string;
   gallery: string[];
 };
 
-const Card = ({ thumbnail, name, gallery }: CardProps) => {
+const Card = ({ thumbnail, name, gallery, resource }: CardProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch(setShowGallery(true));
     dispatch(setAppGallery(gallery));
-    router.push(`/scrap/${name}`);
+    router.push(`/resources/${resource}/${name}`);
   };
   return (
     <div className="group w-60 h-80 rounded-regular p-2 relative shadow-headerLightShadow dark:shadow-headerDarkShadow overflow-hidden">
