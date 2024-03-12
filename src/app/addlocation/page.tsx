@@ -11,28 +11,14 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation";
 import useSnackbar from "../hooks/useSnackbar";
+import { Locations } from "../utils/constants";
 
 type FormProps = {
   locationName: string;
   locationTag: string;
 };
 
-const Categories: string[] = ["Scrap", "Statue"];
-const Locations: string[] = [
-  "Calafia",
-  "Sawmill",
-  "Timber tunnel",
-  "Gino's place",
-  "Where the guy cut us",
-  "First bridge",
-  "Second bridge",
-  "Plane",
-  "Epsylon",
-  "Farm",
-  "Chilliad",
-  "Paleto",
-  "Behind SAHP",
-];
+const Categories: string[] = ["Scrap", "Statues"];
 
 const AddLocationPage = () => {
   const [resource, setCategory] = useState("Select the resource");
@@ -75,13 +61,6 @@ const AddLocationPage = () => {
       showSnackbar(
         "Error",
         "You need to select both the resource and location in order to upload a new location"
-      );
-      return;
-    }
-    if (selectedImages.length < 1 || selectedImages.length > 3) {
-      showSnackbar(
-        "Error",
-        "You need to select at least one, but no more than 3 photos in order to upload a new location"
       );
       return;
     }

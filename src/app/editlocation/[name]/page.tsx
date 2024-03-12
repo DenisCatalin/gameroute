@@ -13,28 +13,14 @@ import { useRouter } from "next/navigation";
 import AddLocation from "../../addlocation/AddLocation";
 import { EditState } from "@/app/redux/edit.slice";
 import useSnackbar from "@/app/hooks/useSnackbar";
+import { Locations } from "@/app/utils/constants";
 
 type FormProps = {
   locationName: string;
   locationTag: string;
 };
 
-const Categories: string[] = ["Scrap", "Statue"];
-const Locations: string[] = [
-  "Calafia",
-  "Sawmill",
-  "Timber tunnel",
-  "Gino's place",
-  "Where the guy cut us",
-  "First bridge",
-  "Second bridge",
-  "Plane",
-  "Epsylon",
-  "Farm",
-  "Chilliad",
-  "Paleto",
-  "Behind SAHP",
-];
+const Categories: string[] = ["Scrap", "Statues"];
 
 const EditLocationPage = () => {
   const user = useSelector((state: any) => state.user);

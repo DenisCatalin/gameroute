@@ -3,29 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
-import { acceptedRouteNames } from "@/app/utils/constants";
+import { Locations, acceptedRouteNames } from "@/app/utils/constants";
 import firebase from "../../lib/firebase";
 import Card from "../../components/Card";
 import OpacityImage from "../../utils/OpacityImage";
 import Select from "../../interface/Select";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-
-const Locations: string[] = [
-  "All locations",
-  "Calafia",
-  "Sawmill",
-  "Timber tunnel",
-  "Gino's place",
-  "Where the guy cut us",
-  "First bridge",
-  "Second bridge",
-  "Plane",
-  "Epsylon",
-  "Farm",
-  "Chilliad",
-  "Paleto",
-  "Behind SAHP",
-];
 
 const ResourcesPage = () => {
   const params = useParams<{ resource: string }>();
