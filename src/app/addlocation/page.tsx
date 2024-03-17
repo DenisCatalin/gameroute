@@ -133,6 +133,10 @@ const AddLocationPage = () => {
         });
         setUploadStatus(false);
         showSnackbar("Success", "Location added successfully");
+        setForm({
+          locationName: "",
+          locationTag: "",
+        });
       } catch (error) {
         console.error(error);
         setUploadStatus(false);
@@ -153,6 +157,7 @@ const AddLocationPage = () => {
               name="locationName"
               type="text"
               onChange={handleInputChange}
+              value={form.locationName}
             />
           </div>
           <div className="w-full h-12  my-4">
@@ -161,6 +166,7 @@ const AddLocationPage = () => {
               name="locationTag"
               type="text"
               onChange={handleInputChange}
+              value={form.locationTag}
             />
           </div>
           <div className="w-full h-12">

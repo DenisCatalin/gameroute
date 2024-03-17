@@ -8,6 +8,8 @@ export type AppState = {
   snackbar: SnackbarState;
   locationToBeAdded: boolean;
   showGallery: boolean;
+  currentGame: string;
+  currentGameItem: string;
   gallery: string[];
   watchingDocID: string;
 };
@@ -19,6 +21,8 @@ const initialState: AppState = {
   locationToBeAdded: false,
   gallery: [],
   showGallery: false,
+  currentGame: "",
+  currentGameItem: "",
   watchingDocID: "",
   snackbar: {
     title: "",
@@ -60,6 +64,12 @@ export const appSlice = createSlice({
     setWatchingDocID(state: any, action: PayloadAction<string>) {
       state.watchingDocID = action.payload;
     },
+    setAppCurrentGame(state: any, action: PayloadAction<string>) {
+      state.currentGame = action.payload;
+    },
+    setAppCurrentGameItem(state: any, action: PayloadAction<string>) {
+      state.currentGameItem = action.payload;
+    },
   },
 });
 
@@ -73,5 +83,7 @@ export const {
   setAppGallery,
   setShowGallery,
   setWatchingDocID,
+  setAppCurrentGame,
+  setAppCurrentGameItem,
 } = appSlice.actions;
 export const appReducer = appSlice.reducer;

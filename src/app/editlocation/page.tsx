@@ -73,6 +73,7 @@ const EditLocationPage = () => {
               name="locationName"
               type="text"
               onChange={handleInputChange}
+              value={locationName}
             />
           </div>
         </div>

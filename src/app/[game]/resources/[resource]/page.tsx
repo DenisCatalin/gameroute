@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Locations, acceptedRouteNames } from "@/app/utils/constants";
-import firebase from "../../lib/firebase";
-import Card from "../../components/Card";
-import OpacityImage from "../../utils/OpacityImage";
-import Select from "../../interface/Select";
+import firebase from "@/app/lib/firebase";
+import Card from "@/app/components/Card";
+import OpacityImage from "@/app/utils/OpacityImage";
+import Select from "@/app/interface/Select";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 const ResourcesPage = () => {

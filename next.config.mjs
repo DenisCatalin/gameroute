@@ -9,6 +9,7 @@ const nextConfig = {
       { hostname: "lh6.googleusercontent.com" },
       { hostname: "lh2.googleusercontent.com" },
       { hostname: "lh1.googleusercontent.com" },
+      { hostname: "assets.csnades.gg" },
     ],
   },
 };

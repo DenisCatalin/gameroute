@@ -1,5 +1,11 @@
 import type { Config } from "tailwindcss";
 
+const customSpacing: { [key: string]: string } = {};
+
+for (let i = 0; i <= 100; i++) {
+  customSpacing[`${i}percent`] = `${i}%`;
+}
+
 const config = {
   darkMode: "class",
   content: [
@@ -19,6 +25,7 @@ const config = {
       sm: "450px",
       md: "680px",
       md2: "850px",
+      md3: "950px",
       lg: "1200px",
       lg2: "1500px",
       fhd: "1900px",
@@ -40,32 +47,25 @@ const config = {
         "110": "32rem",
         "116": "36rem",
         "128": "40rem",
+        "136": "47.9rem",
         "138": "48rem",
+        "140": "50rem",
         "142": "52rem",
         "148": "56rem",
         "152": "60rem",
+        "182": "70rem",
         "200": "100rem",
         "10dvh": "10dvh",
         "60dvh": "60dvh",
         "70dvh": "70dvh",
         "80dvh": "80dvh",
+        "85dvh": "85dvh",
         big: "55rem",
         nav: "52rem",
         "550px": "550px",
         "6rem": "6rem",
         snackbarTop: "85%",
-        "10percent": "10%",
-        "20percent": "20%",
-        "25percent": "25%",
-        "30percent": "30%",
-        "35percent": "35%",
-        "40percent": "40%",
-        "50percent": "50%",
-        "60percent": "60%",
-        "70percent": "70%",
-        "80percent": "80%",
-        "90percent": "90%",
-        "100percent": "100%",
+        ...customSpacing,
       },
       zIndex: {
         "1000": "1000",

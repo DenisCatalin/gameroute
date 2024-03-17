@@ -191,6 +191,7 @@ const EditLocationPage = () => {
               name="locationName"
               type="text"
               onChange={handleInputChange}
+              value={form.locationName}
             />
           </div>
           <div className="w-full h-12  my-4">
@@ -201,6 +202,7 @@ const EditLocationPage = () => {
               name="locationTag"
               type="text"
               onChange={handleInputChange}
+              value={form.locationTag}
             />
           </div>
           <div className="w-full h-12">
