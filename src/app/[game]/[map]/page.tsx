@@ -1,6 +1,6 @@
 "use client";
 
-import { Maps, MapsState } from "@/app/utils/constants";
+import { Maps, MapsState, hardcodedPositions } from "@/app/utils/constants";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
@@ -19,24 +19,19 @@ import {
   miragePositions,
   infernoPositions,
 } from "@/app/utils/constants";
-import NadeDot, { PositionsProps } from "@/app/components/NadeDot";
+import NadeDot from "@/app/components/NadeDot";
 
-const Buttons = ["MOLOTOV", "SMOKE", "FLASHBANG", "GRENADE"];
+const Buttons = ["Molotov", "Smoke", "Flashbang", "Grenade"];
 
 type PositionFromDB = {
   map: string;
   position: string;
   type: string;
+  description: string;
+  video: string;
+  gallery: string;
+  createdAt: string;
 };
-
-interface HardcodedPositions {
-  [key: string]: {
-    [key: string]: {
-      top: string;
-      left: string;
-    };
-  };
-}
 
 const CSRadarPage = () => {
   const router = useRouter();
@@ -45,7 +40,7 @@ const CSRadarPage = () => {
   const [index, setIndex] = useState<number>(0);
   const [callouts, setCallouts] = useState<string[]>([]);
   const [location, setLocation] = useState<string>("All positions");
-  const [nade, setNade] = useState<string>("");
+  const [nade, setNade] = useState<string>("Smoke");
   const [mapData, setMapData] = useState<MapsState>({
     name: "",
     logo: "",
@@ -98,78 +93,66 @@ const CSRadarPage = () => {
 
   const [positions, setPositions] = useState<{ top: string; left: string; position: string }[]>([]);
 
-  // Mocked data similar to your hardcodedPositions object
-  const hardcodedPositions: HardcodedPositions = {
-    Anubis: {
-      Heaven: { top: "34", left: "23" },
-      Heaven2: { top: "65", left: "45" },
-    },
-    Nuke: {
-      Ramp: { top: "34", left: "23" },
-      Hell: { top: "65", left: "45" },
-    },
-    // Add more maps and positions here as needed
-  };
+  const positionsFromDB: PositionFromDB[] = [];
+
+  // anubisPositions.forEach(position => {
+  //   positionsFromDB.push({
+  //     map: "Anubis",
+  //     position: position,
+  //     type: "Grenade",
+  //     description: "Description",
+  //     video: "Video",
+  //     gallery: "Gallery",
+  //     createdAt: "Date",
+  //   });
+  // });
 
   useEffect(() => {
-    // Mocked data from database response
-    const positionsFromDB: PositionFromDB[] = [
-      { map: "Anubis", position: "Heaven", type: "Smoke" },
-      { map: "Anubis", position: "Heaven2", type: "Smoke" },
-      { map: "Anubis", position: "Heaven2", type: "Molotov" },
-      { map: "Nuke", position: "Ramp", type: "Molotov" },
-      // Add more positions from DB here
-    ];
-
-    // Filter positions from DB based on type and hardcoded positions
     const filteredPositions = positionsFromDB
       .filter(
         position =>
-          position.type === "Smoke" &&
-          position.map === "Anubis" &&
+          position.type === nade &&
+          position.map === params.map &&
+          (location === "All positions" || position.position === location) && // Exclude location filter if location is "All positions"
           hardcodedPositions[position.map] &&
           hardcodedPositions[position.map][position.position]
       )
       .map(position => ({
         top: hardcodedPositions[position.map][position.position].top,
         left: hardcodedPositions[position.map][position.position].left,
+        type: position.type,
         position: position.position,
+        description: position.description,
+        video: position.video,
+        gallery: position.gallery,
+        createdAt: position.createdAt,
       }));
 
     setPositions(filteredPositions);
-    console.log(filteredPositions);
-  }, []);
+  }, [nade, location]);
 
   return (
     <div className="flex flex-col items-center justify-center lg3:flex-row lg3:items-stretch lg3:justify-start">
-      <div className="transition mt-6 mb-6 w-90percent static h-110 py-6 flex flex-col items-center justify-evenly rounded-regular bg-coverLight shadow-headerLightShadow dark:bg-coverDark dark:shadow-headerDarkShadow ml-0 lg3:ml-16 lg3:fixed lg3:top-25percent lg3:left-75percent lg3:w-72 lg3:h-110">
+      <div className="transition mt-6 mb-6 w-90percent static h-110 py-6 flex flex-col items-center justify-evenly rounded-regular bg-coverLight shadow-headerLightShadow dark:bg-coverDark dark:shadow-headerDarkShadow ml-0 lg3:ml-16 lg3:fixed lg3:top-35percent lg3:left-75percent lg3:w-72 lg3:h-72">
         <div className="w-32 h-32 relative">
           {mapData.logo.length > 0 && <OpacityImage src={mapData.logo} fittment="cover" />}
         </div>
         <Select options={callouts} value={location} select={setLocation} styles="w-60" />
-        {Buttons.map((button: string, index: number) => (
-          <button
-            key={index}
-            className="w-40 h-16 hover:bg-main font-bold text-xl rounded-regular transition text-dark dark:text-light hover:text-light"
-            onClick={(e: any) => setNade(e.target.textContent)}
-          >
-            {button}
-          </button>
-        ))}
+        <Select options={Buttons} value={nade} select={setNade} styles="w-60" />
       </div>
       <div className="max-w-full lg2:w-192">
         <div className="w-full relative">
           {mapData.radar && mapData.radar[index] && (
             <img src={mapData.radar[index]} className="w-full" />
           )}
-          {/* <button className="rounded-full fixed top-15percent left-90percent transform -translate-x-1/2 -translate-y-1/2">
-            <FaCircleInfo className="w-8 h-8" />
-          </button> */}
-          {positions.map((data: any, index: number) => (
+          {/* {positions.map((data: any, index: number) => (
             <div key={index}>
-              <NadeDot positionData={data} nade={"Smoke"} positionName={data.position} />
+              <NadeDot nadeData={data} />
             </div>
-          ))}
+          ))} */}
+          <div
+            className={`bg-dark top-0percent left-0percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
+          ></div>
         </div>
       </div>
     </div>

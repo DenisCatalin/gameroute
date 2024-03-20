@@ -4,6 +4,9 @@ const customSpacing: { [key: string]: string } = {};
 
 for (let i = 0; i <= 100; i++) {
   customSpacing[`${i}percent`] = `${i}%`;
+  for (let j = 1; j <= 9; j++) {
+    customSpacing[`${i}.${j}percent`] = `${i}.${j}%`;
+  }
 }
 
 const config = {
