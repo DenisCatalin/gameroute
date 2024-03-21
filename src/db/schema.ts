@@ -56,11 +56,8 @@ export const nades = pgTable(
     nadeID: serial("id").primaryKey(),
     nadeMap: text("map").notNull(),
     nadePosition: text("position").notNull(),
-    nadeType: text("type").notNull(),
-    nadeDescription: text("description"),
-    nadeVideo: text("video"),
-    nadeGallery: text("gallery"),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    nadeGrenades: text("grenades").notNull(),
+    nadeTeam: text("team"),
   },
   nade => {
     return {

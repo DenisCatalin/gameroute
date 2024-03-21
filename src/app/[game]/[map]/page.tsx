@@ -22,10 +22,12 @@ import {
 import NadeDot from "@/app/components/NadeDot";
 
 const Buttons = ["Molotov", "Smoke", "Flashbang", "Grenade"];
+const Teams = ["All teams", "CT", "T"];
 
 type PositionFromDB = {
   map: string;
   position: string;
+  team: string;
   grenades: {
     type: string;
     description: string;
@@ -43,6 +45,7 @@ const CSRadarPage = () => {
   const [callouts, setCallouts] = useState<string[]>([]);
   const [location, setLocation] = useState<string>("All positions");
   const [nade, setNade] = useState<string>("Smoke");
+  const [team, setTeam] = useState<string>("All teams");
   const [mapData, setMapData] = useState<MapsState>({
     name: "",
     logo: "",
@@ -95,10 +98,13 @@ const CSRadarPage = () => {
 
   const [positions, setPositions] = useState<{ top: string; left: string; position: string }[]>([]);
 
-  const positionsFromDB = [
-    {
-      map: "Ancient",
-      position: "Red",
+  const positionsFromDB: PositionFromDB[] = [];
+
+  overpassPositions.forEach(position => {
+    positionsFromDB.push({
+      map: "Overpass",
+      position: position,
+      team: "All teams",
       grenades: [
         {
           type: "Grenade",
@@ -107,28 +113,9 @@ const CSRadarPage = () => {
           gallery: "Gallery 1",
           createdAt: "Date 1",
         },
-        {
-          type: "Grenade",
-          description: "Description 2",
-          video: "Video 2",
-          gallery: "Gallery 2",
-          createdAt: "Date 2",
-        },
       ],
-    },
-  ];
-
-  // ancientPositions.forEach(position => {
-  //   positionsFromDB.push({
-  //     map: "Ancient",
-  //     position: position,
-  //     type: "Grenade",
-  //     description: "Description",
-  //     video: "Video",
-  //     gallery: "Gallery",
-  //     createdAt: "Date",
-  //   });
-  // });
+    });
+  });
 
   useEffect(() => {
     const filteredPositions = positionsFromDB
@@ -138,6 +125,7 @@ const CSRadarPage = () => {
             grenade.type === nade &&
             position.map === params.map &&
             (location === "All positions" || position.position === location) &&
+            (team === "All teams" || position.team === team) &&
             hardcodedPositions[position.map] &&
             hardcodedPositions[position.map][position.position]
         )
@@ -145,19 +133,20 @@ const CSRadarPage = () => {
       .map(position => ({
         top: hardcodedPositions[position.map][position.position].top,
         left: hardcodedPositions[position.map][position.position].left,
+        team: team,
         grenades: position.grenades.filter(grenade => grenade.type === nade),
         position: position.position,
       }));
 
     setPositions(filteredPositions);
-  }, [nade, location]);
-
+  }, [nade, location, team]);
   return (
     <div className="flex flex-col items-center justify-center lg3:flex-row lg3:items-stretch lg3:justify-start">
-      <div className="transition mt-6 mb-6 w-90percent static h-110 py-6 flex flex-col items-center justify-evenly rounded-regular bg-coverLight shadow-headerLightShadow dark:bg-coverDark dark:shadow-headerDarkShadow ml-0 lg3:ml-16 lg3:fixed lg3:top-35percent lg3:left-75percent lg3:w-72 lg3:h-72">
-        <div className="w-32 h-32 relative">
+      <div className="transition mt-6 mb-6 w-90percent static h-110 py-6 flex flex-col items-center justify-evenly rounded-regular bg-coverLight shadow-headerLightShadow dark:bg-coverDark dark:shadow-headerDarkShadow ml-0 lg3:ml-16 lg3:fixed lg3:top-35percent lg3:left-75percent lg3:w-72 lg3:h-96">
+        <div className="w-24 h-24 relative">
           {mapData.logo.length > 0 && <OpacityImage src={mapData.logo} fittment="cover" />}
         </div>
+        <Select options={Teams} value={team} select={setTeam} styles="w-60" />
         <Select options={callouts} value={location} select={setLocation} styles="w-60" />
         <Select options={Buttons} value={nade} select={setNade} styles="w-60" />
       </div>
@@ -168,11 +157,11 @@ const CSRadarPage = () => {
           )}
           {positions.map((data: any, index: number) => (
             <div key={index}>
-              <NadeDot nadeData={data} type={nade} />
+              <NadeDot nadeData={data} type={nade} team={team} />
             </div>
           ))}
           {/* <div
-            className={`bg-dark top-33percent left-55percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
+            className={`bg-dark top-42percent left-18percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
           /> */}
         </div>
       </div>

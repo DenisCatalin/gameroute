@@ -15,9 +15,10 @@ export type PositionsProps = {
 type Props = {
   nadeData: any;
   type: "Smoke" | "Molotov" | "Grenade" | "Flashbang" | string;
+  team: string;
 };
 
-const NadeDot = ({ nadeData, type }: Props) => {
+const NadeDot = ({ nadeData, type, team }: Props) => {
   const { top, left, position, grenades } = nadeData;
 
   const getBorderColor = () => {
@@ -39,8 +40,7 @@ const NadeDot = ({ nadeData, type }: Props) => {
   };
 
   const handleClick = () => {
-    // Log details for all grenades at this position
-    grenades.forEach((grenade: any) => {
+    grenades.map((grenade: any) => {
       console.log("Type:", grenade.type);
       console.log("Description:", grenade.description);
       console.log("Video:", grenade.video);
@@ -66,7 +66,9 @@ const NadeDot = ({ nadeData, type }: Props) => {
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>{position}</p>
+          <p>
+            {position} - {team}
+          </p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
