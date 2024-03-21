@@ -26,11 +26,13 @@ const Buttons = ["Molotov", "Smoke", "Flashbang", "Grenade"];
 type PositionFromDB = {
   map: string;
   position: string;
-  type: string;
-  description: string;
-  video: string;
-  gallery: string;
-  createdAt: string;
+  grenades: {
+    type: string;
+    description: string;
+    video: string;
+    gallery: string;
+    createdAt: string;
+  }[];
 };
 
 const CSRadarPage = () => {
@@ -93,11 +95,32 @@ const CSRadarPage = () => {
 
   const [positions, setPositions] = useState<{ top: string; left: string; position: string }[]>([]);
 
-  const positionsFromDB: PositionFromDB[] = [];
+  const positionsFromDB = [
+    {
+      map: "Ancient",
+      position: "Red",
+      grenades: [
+        {
+          type: "Grenade",
+          description: "Description 1",
+          video: "Video 1",
+          gallery: "Gallery 1",
+          createdAt: "Date 1",
+        },
+        {
+          type: "Grenade",
+          description: "Description 2",
+          video: "Video 2",
+          gallery: "Gallery 2",
+          createdAt: "Date 2",
+        },
+      ],
+    },
+  ];
 
-  // anubisPositions.forEach(position => {
+  // ancientPositions.forEach(position => {
   //   positionsFromDB.push({
-  //     map: "Anubis",
+  //     map: "Ancient",
   //     position: position,
   //     type: "Grenade",
   //     description: "Description",
@@ -109,23 +132,21 @@ const CSRadarPage = () => {
 
   useEffect(() => {
     const filteredPositions = positionsFromDB
-      .filter(
-        position =>
-          position.type === nade &&
-          position.map === params.map &&
-          (location === "All positions" || position.position === location) && // Exclude location filter if location is "All positions"
-          hardcodedPositions[position.map] &&
-          hardcodedPositions[position.map][position.position]
+      .filter(position =>
+        position.grenades.some(
+          grenade =>
+            grenade.type === nade &&
+            position.map === params.map &&
+            (location === "All positions" || position.position === location) &&
+            hardcodedPositions[position.map] &&
+            hardcodedPositions[position.map][position.position]
+        )
       )
       .map(position => ({
         top: hardcodedPositions[position.map][position.position].top,
         left: hardcodedPositions[position.map][position.position].left,
-        type: position.type,
+        grenades: position.grenades.filter(grenade => grenade.type === nade),
         position: position.position,
-        description: position.description,
-        video: position.video,
-        gallery: position.gallery,
-        createdAt: position.createdAt,
       }));
 
     setPositions(filteredPositions);
@@ -145,14 +166,14 @@ const CSRadarPage = () => {
           {mapData.radar && mapData.radar[index] && (
             <img src={mapData.radar[index]} className="w-full" />
           )}
-          {/* {positions.map((data: any, index: number) => (
+          {positions.map((data: any, index: number) => (
             <div key={index}>
-              <NadeDot nadeData={data} />
+              <NadeDot nadeData={data} type={nade} />
             </div>
-          ))} */}
-          <div
-            className={`bg-dark top-0percent left-0percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
-          ></div>
+          ))}
+          {/* <div
+            className={`bg-dark top-33percent left-55percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
+          /> */}
         </div>
       </div>
     </div>
