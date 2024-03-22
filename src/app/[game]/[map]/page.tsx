@@ -136,23 +136,6 @@ const CSRadarPage = () => {
       });
     });
 
-    vertigoPositionsLower.forEach(position => {
-      positionsFromDB.push({
-        map: map,
-        position: position,
-        team: "All teams",
-        grenades: [
-          {
-            type: "Molotov",
-            description: "Description 1",
-            video: "Video 1",
-            gallery: "Gallery 1",
-            createdAt: "Date 1",
-          },
-        ],
-      });
-    });
-
     const filteredPositions = positionsFromDB
       .filter(position =>
         position.grenades.some(
