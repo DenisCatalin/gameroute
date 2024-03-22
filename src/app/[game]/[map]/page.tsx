@@ -11,10 +11,10 @@ import { FaCircleInfo } from "react-icons/fa6";
 import {
   anubisPositions,
   ancientPositions,
-  nukePositions1,
-  nukePositions2,
-  vertigoPositions1,
-  vertigoPositions2,
+  nukePositionsUpper,
+  nukePositionsLower,
+  vertigoPositionsUpper,
+  vertigoPositionsLower,
   overpassPositions,
   miragePositions,
   infernoPositions,
@@ -46,6 +46,7 @@ const CSRadarPage = () => {
   const [location, setLocation] = useState<string>("All positions");
   const [nade, setNade] = useState<string>("Smoke");
   const [team, setTeam] = useState<string>("All teams");
+  const [map, setMap] = useState<string>(params.map);
   const [mapData, setMapData] = useState<MapsState>({
     name: "",
     logo: "",
@@ -70,10 +71,16 @@ const CSRadarPage = () => {
         return setCallouts(anubisPositions);
       case "Ancient":
         return setCallouts(ancientPositions);
-      case "Nuke":
-        return setCallouts(nukePositions1);
-      case "Vertigo":
-        return setCallouts(vertigoPositions1);
+      case "Nuke": {
+        setCallouts(nukePositionsUpper);
+        setMap("Nuke_Upper");
+        return;
+      }
+      case "Vertigo": {
+        setMap("Vertigo_Upper");
+        setCallouts(vertigoPositionsUpper);
+        return;
+      }
       case "Mirage":
         return setCallouts(miragePositions);
       case "Inferno":
@@ -86,13 +93,24 @@ const CSRadarPage = () => {
   }, [params.map]);
 
   useEffect(() => {
+    setLocation("All positions");
     if (params.map === "Nuke") {
-      if (index === 0) setCallouts(nukePositions1);
-      else if (index === 1) setCallouts(nukePositions2);
+      if (index === 0) {
+        setCallouts(nukePositionsUpper);
+        setMap("Nuke_Upper");
+      } else if (index === 1) {
+        setCallouts(nukePositionsLower);
+        setMap("Nuke_Lower");
+      }
     }
     if (params.map === "Vertigo") {
-      if (index === 0) setCallouts(vertigoPositions1);
-      else if (index === 1) setCallouts(vertigoPositions2);
+      if (index === 0) {
+        setCallouts(vertigoPositionsUpper);
+        setMap("Vertigo_Upper");
+      } else if (index === 1) {
+        setCallouts(vertigoPositionsLower);
+        setMap("Vertigo_Lower");
+      }
     }
   }, [index]);
 
@@ -100,30 +118,47 @@ const CSRadarPage = () => {
 
   const positionsFromDB: PositionFromDB[] = [];
 
-  overpassPositions.forEach(position => {
-    positionsFromDB.push({
-      map: "Overpass",
-      position: position,
-      team: "All teams",
-      grenades: [
-        {
-          type: "Grenade",
-          description: "Description 1",
-          video: "Video 1",
-          gallery: "Gallery 1",
-          createdAt: "Date 1",
-        },
-      ],
-    });
-  });
-
   useEffect(() => {
+    vertigoPositionsUpper.forEach(position => {
+      positionsFromDB.push({
+        map: map,
+        position: position,
+        team: "All teams",
+        grenades: [
+          {
+            type: "Molotov",
+            description: "Description 1",
+            video: "Video 1",
+            gallery: "Gallery 1",
+            createdAt: "Date 1",
+          },
+        ],
+      });
+    });
+
+    vertigoPositionsLower.forEach(position => {
+      positionsFromDB.push({
+        map: map,
+        position: position,
+        team: "All teams",
+        grenades: [
+          {
+            type: "Molotov",
+            description: "Description 1",
+            video: "Video 1",
+            gallery: "Gallery 1",
+            createdAt: "Date 1",
+          },
+        ],
+      });
+    });
+
     const filteredPositions = positionsFromDB
       .filter(position =>
         position.grenades.some(
           grenade =>
             grenade.type === nade &&
-            position.map === params.map &&
+            position.map === map &&
             (location === "All positions" || position.position === location) &&
             (team === "All teams" || position.team === team) &&
             hardcodedPositions[position.map] &&
@@ -139,10 +174,35 @@ const CSRadarPage = () => {
       }));
 
     setPositions(filteredPositions);
-  }, [nade, location, team]);
+  }, [nade, location, team, map]);
+
+  const changeRadar = () => {
+    if (index === 0) {
+      setIndex(1);
+    } else {
+      setIndex(0);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center lg3:flex-row lg3:items-stretch lg3:justify-start">
       <div className="transition mt-6 mb-6 w-90percent static h-110 py-6 flex flex-col items-center justify-evenly rounded-regular bg-coverLight shadow-headerLightShadow dark:bg-coverDark dark:shadow-headerDarkShadow ml-0 lg3:ml-16 lg3:fixed lg3:top-35percent lg3:left-75percent lg3:w-72 lg3:h-96">
+        {(params.map === "Vertigo" && (
+          <button
+            onClick={changeRadar}
+            className="w-24 h-12 bg-main rounded-regular flex items-center justify-center"
+          >
+            Change
+          </button>
+        )) ||
+          (params.map === "Nuke" && (
+            <button
+              onClick={changeRadar}
+              className="w-24 h-12 bg-main rounded-regular flex items-center justify-center"
+            >
+              Change
+            </button>
+          ))}
         <div className="w-24 h-24 relative">
           {mapData.logo.length > 0 && <OpacityImage src={mapData.logo} fittment="cover" />}
         </div>
@@ -161,7 +221,7 @@ const CSRadarPage = () => {
             </div>
           ))}
           {/* <div
-            className={`bg-dark top-42percent left-18percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
+            className={`bg-dark top-66percent left-31percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
           /> */}
         </div>
       </div>
