@@ -8,7 +8,7 @@ const handler = (req: Request) =>
     router: appRouter,
     createContext: () => ({
       headers: {
-        "Access-Control-Allow-Origin": "https://my-shop-pi-roan.vercel.app",
+        "Access-Control-Allow-Origin": "https://blackwater-nu.vercel.app/",
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Credentials": "true",

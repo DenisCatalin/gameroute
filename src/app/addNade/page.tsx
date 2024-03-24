@@ -73,13 +73,13 @@ const AddNadePage = () => {
   });
 
   useEffect(() => {
-    // if (user && !user.admin) {
-    //   router.push("/");
-    //   showSnackbar(
-    //     "Error",
-    //     "You are not allowed to see this page. This page can only be accessed by admins."
-    //   );
-    // }
+    if (user && !user.admin) {
+      router.push("/");
+      showSnackbar(
+        "Error",
+        "You are not allowed to see this page. This page can only be accessed by admins."
+      );
+    }
   }, []);
 
   const onUpload = async () => {
@@ -91,6 +91,14 @@ const AddNadePage = () => {
       showSnackbar("Error", "You need to select a position in order to upload a new nade");
       return;
     }
+    if (imageLinks.length === 0 && videoLink.length === 0) {
+      showSnackbar(
+        "Error",
+        "You didn't add any video or images. Add some media in order to upload a new nade"
+      );
+      return;
+    }
+
     setUploadStatus(true);
     showSnackbar("Notification", "Your images are uploading ...");
     const formData = new FormData();

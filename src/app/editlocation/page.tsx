@@ -3,7 +3,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Input from "../interface/Input";
 import { useSelector, useDispatch } from "react-redux";
-import { setLocationToBeAdded, setWatchingDocID } from "../redux/app.slice";
+import { setWatchingDocID } from "../redux/app.slice";
 import firebase from "../lib/firebase";
 import { useRouter } from "next/navigation";
 import { setEditDocument, setEditDocumentID } from "../redux/edit.slice";

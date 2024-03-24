@@ -18,7 +18,7 @@ type FormProps = {
   locationTag: string;
 };
 
-const Categories: string[] = ["Scrap", "Statues"];
+const Categories: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
 
 const AddLocationPage = () => {
   const [resource, setCategory] = useState("Select the resource");
