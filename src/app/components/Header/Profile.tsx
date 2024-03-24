@@ -153,17 +153,23 @@ const Profile = () => {
     ...(userRedux.admin
       ? [
           {
-            content: "Add location",
+            content: "Add location (GTA)",
             icon: <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />,
             activeIcon: <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
             onClick: () => router.push("/addlocation"),
           },
           {
-            content: "Edit location",
+            content: "Add nade (CS)",
             icon: <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />,
             activeIcon: <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
-            onClick: () => router.push("/editlocation"),
+            onClick: () => router.push("/addNade"),
           },
+          // {
+          //   content: "Edit location (WIP)",
+          //   icon: <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />,
+          //   activeIcon: <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
+          //   onClick: () => router.push("/editlocation"),
+          // },
         ]
       : []),
     {
@@ -190,37 +196,6 @@ const Profile = () => {
     },
   ];
 
-  const MenuLinks = [
-    {
-      content: "HOME",
-      icon: <FaHouse className="mr-2 h-5 w-5" aria-hidden="true" />,
-      activeIcon: <FaHouse className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
-      isLink: true,
-      linkTo: "/",
-    },
-    {
-      content: "SCRAP",
-      icon: <GiMetalGolemHead className="mr-2 h-5 w-5" aria-hidden="true" />,
-      activeIcon: <GiMetalGolemHead className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
-      isLink: true,
-      linkTo: "/resources/scrap",
-    },
-    {
-      content: "STATUES",
-      icon: <GiColombianStatue className="mr-2 h-5 w-5" aria-hidden="true" />,
-      activeIcon: <GiColombianStatue className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
-      isLink: true,
-      linkTo: "/resources/statues",
-    },
-    {
-      content: "TREASURES",
-      icon: <GiTreasureMap className="mr-2 h-5 w-5" aria-hidden="true" />,
-      activeIcon: <GiTreasureMap className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
-      isLink: true,
-      linkTo: "/resources/treasures",
-    },
-  ];
-
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
     if (storedTheme !== null) {
@@ -239,7 +214,6 @@ const Profile = () => {
               </div>
             </>
           }
-          links={MenuLinks}
           options={Options}
           responsive={true}
         />

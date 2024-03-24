@@ -11,24 +11,7 @@ type LinkProps = {
   linkTo: string;
 };
 
-const NavLinks: LinkProps[] = [
-  {
-    content: "home",
-    linkTo: "/",
-  },
-  {
-    content: "scrap",
-    linkTo: "/resources/scrap",
-  },
-  {
-    content: "statues",
-    linkTo: "/resources/statues",
-  },
-  {
-    content: "treasures",
-    linkTo: "/resources/treasures",
-  },
-];
+const NavLinks: LinkProps[] = [];
 
 const Navigation = () => {
   const pathname = usePathname();

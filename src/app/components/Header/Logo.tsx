@@ -24,7 +24,7 @@ const Logo = () => {
         <OpacityImage src={"/static/emblem_256.png"} fittment="contain" />
       </div>
       <div className="w-auto h-auto flex flex-col items-start justify-between">
-        <p className="text-dark dark:text-light font-bold hidden text-main lg2:block">OUR USEFUL</p>
+        <p className="text-dark dark:text-light font-bold hidden lg2:block">OUR USEFUL</p>
         <p className="text-dark dark:text-light font-bold hidden lg2:block">WEB APP</p>
       </div>
     </div>

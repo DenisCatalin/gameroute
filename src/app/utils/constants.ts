@@ -1,4 +1,4 @@
-export const acceptedRouteNames: string[] = ["scrap", "statues", "treasures"];
+export const acceptedRouteNames: string[] = ["scrap", "statues", "treasures", "animal-skins"];
 export const acceptedRouteGames: string[] = ["cs", "gta"];
 
 type HardcodedPositions = {

@@ -17,7 +17,7 @@ const Card = ({ thumbnail, name, gallery, resource }: CardProps) => {
   const handleClick = () => {
     dispatch(setShowGallery(true));
     dispatch(setAppGallery(gallery));
-    router.push(`/resources/${resource}/${name}`);
+    router.push(`/gta/resources/${resource}/${name}`);
   };
   return (
     <div className="group w-60 h-80 rounded-regular p-2 relative shadow-headerLightShadow dark:shadow-headerDarkShadow overflow-hidden">

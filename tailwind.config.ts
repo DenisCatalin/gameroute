@@ -113,6 +113,8 @@ const config = {
         borderMain: "rgb(20, 65, 122)",
         offDark: "rgba(255, 255, 255, .1)",
         offLight: "rgba(0, 0, 0, .1)",
+        blurBgDark: "rgba(0, 0, 0, .4)",
+        blurBgLight: "rgba(255, 255, 255, .4)",
       },
       keyframes: {
         "accordion-down": {

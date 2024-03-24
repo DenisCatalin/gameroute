@@ -57,7 +57,7 @@ export const nades = pgTable(
     nadeMap: text("map").notNull(),
     nadePosition: text("position").notNull(),
     nadeGrenades: text("grenades").notNull(),
-    nadeTeam: text("team"),
+    nadeTeam: text("team").notNull(),
   },
   nade => {
     return {

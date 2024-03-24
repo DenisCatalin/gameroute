@@ -7,7 +7,6 @@ import { useParams, useRouter } from "next/navigation";
 import { setAppCurrentGame, setAppCurrentGameItem } from "@/app/redux/app.slice";
 import OpacityImage from "@/app/utils/OpacityImage";
 import Select from "@/app/interface/Select";
-import { FaCircleInfo } from "react-icons/fa6";
 import {
   anubisPositions,
   ancientPositions,
@@ -20,27 +19,16 @@ import {
   infernoPositions,
 } from "@/app/utils/constants";
 import NadeDot from "@/app/components/NadeDot";
+import { trpc } from "@/app/_trpc/client";
 
 const Buttons = ["Molotov", "Smoke", "Flashbang", "Grenade"];
 const Teams = ["All teams", "CT", "T"];
-
-type PositionFromDB = {
-  map: string;
-  position: string;
-  team: string;
-  grenades: {
-    type: string;
-    description: string;
-    video: string;
-    gallery: string;
-    createdAt: string;
-  }[];
-};
 
 const CSRadarPage = () => {
   const router = useRouter();
   const params = useParams<{ game: string; map: string }>();
   const dispatch = useDispatch();
+  const [positions, setPositions] = useState<{ top: string; left: string; position: string }[]>([]);
   const [index, setIndex] = useState<number>(0);
   const [callouts, setCallouts] = useState<string[]>([]);
   const [location, setLocation] = useState<string>("All positions");
@@ -54,6 +42,9 @@ const CSRadarPage = () => {
     radar: [""],
   });
 
+  const getNades = trpc.getNades.useQuery();
+  const positionsFromDB = getNades.data;
+
   useEffect(() => {
     const isNameFound = Maps.findIndex(map => map.name === params.map);
     if (isNameFound !== -1) {
@@ -61,7 +52,14 @@ const CSRadarPage = () => {
       dispatch(setAppCurrentGame("cs"));
       dispatch(setAppCurrentGameItem(params.map));
     } else {
-      router.push("/cs");
+      switch (params.game) {
+        case "cs":
+          return router.push("/cs");
+        case "gta":
+          return router.push("/gta");
+        default:
+          return router.push("/");
+      }
     }
   }, []);
 
@@ -114,50 +112,33 @@ const CSRadarPage = () => {
     }
   }, [index]);
 
-  const [positions, setPositions] = useState<{ top: string; left: string; position: string }[]>([]);
-
-  const positionsFromDB: PositionFromDB[] = [];
-
   useEffect(() => {
-    vertigoPositionsUpper.forEach(position => {
-      positionsFromDB.push({
-        map: map,
-        position: position,
-        team: "All teams",
-        grenades: [
-          {
-            type: "Molotov",
-            description: "Description 1",
-            video: "Video 1",
-            gallery: "Gallery 1",
-            createdAt: "Date 1",
-          },
-        ],
-      });
-    });
-
-    const filteredPositions = positionsFromDB
-      .filter(position =>
-        position.grenades.some(
-          grenade =>
-            grenade.type === nade &&
-            position.map === map &&
-            (location === "All positions" || position.position === location) &&
-            (team === "All teams" || position.team === team) &&
-            hardcodedPositions[position.map] &&
-            hardcodedPositions[position.map][position.position]
+    if (positionsFromDB) {
+      const filteredPositions = positionsFromDB
+        .filter(position =>
+          JSON.parse(position.nadeGrenades).some(
+            (grenade: any) =>
+              grenade.type === nade &&
+              position.nadeMap === map &&
+              (location === "All positions" || position.nadePosition === location) &&
+              (team === "All teams" || position.nadeTeam === team) &&
+              hardcodedPositions[position.nadeMap] &&
+              hardcodedPositions[position.nadeMap][position.nadePosition]
+          )
         )
-      )
-      .map(position => ({
-        top: hardcodedPositions[position.map][position.position].top,
-        left: hardcodedPositions[position.map][position.position].left,
-        team: team,
-        grenades: position.grenades.filter(grenade => grenade.type === nade),
-        position: position.position,
-      }));
+        .map(position => ({
+          top: hardcodedPositions[position.nadeMap][position.nadePosition].top,
+          left: hardcodedPositions[position.nadeMap][position.nadePosition].left,
+          team: team,
+          grenades: JSON.parse(position.nadeGrenades).filter(
+            (grenade: any) => grenade.type === nade
+          ),
+          position: position.nadePosition,
+        }));
 
-    setPositions(filteredPositions);
-  }, [nade, location, team, map]);
+      setPositions(filteredPositions);
+    }
+  }, [nade, location, team, map, positionsFromDB]);
 
   const changeRadar = () => {
     if (index === 0) {

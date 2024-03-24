@@ -7,6 +7,7 @@ import { acceptedRouteGames } from "../utils/constants";
 import useSnackbar from "../hooks/useSnackbar";
 import { useDispatch } from "react-redux";
 import { setAppCurrentGame } from "../redux/app.slice";
+import GTAHomepage from "../components/GTAHomepage";
 
 const GamePage = () => {
   const params = useParams<{ game: string }>();
@@ -27,7 +28,12 @@ const GamePage = () => {
     }
   }, []);
 
-  return <div className="mt-4">{params.game === "cs" && <CounterStrikeHomepage />}</div>;
+  return (
+    <div className="mt-4">
+      {params.game === "cs" && <CounterStrikeHomepage />}
+      {params.game === "gta" && <GTAHomepage />}
+    </div>
+  );
 };
 
 export default GamePage;

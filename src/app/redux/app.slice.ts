@@ -1,6 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SnackbarState } from "../interface/Snackbar";
 
+export type NadesProp = {
+  type: string;
+  description: string;
+  video: string;
+  gallery: string;
+  createdAt: string;
+};
+
 export type AppState = {
   theme: string;
   navigation: boolean;
@@ -8,6 +16,8 @@ export type AppState = {
   snackbar: SnackbarState;
   locationToBeAdded: boolean;
   showGallery: boolean;
+  nades: NadesProp[];
+  showNadeWrapper: boolean;
   currentGame: string;
   currentGameItem: string;
   gallery: string[];
@@ -20,7 +30,9 @@ const initialState: AppState = {
   currentPage: "/",
   locationToBeAdded: false,
   gallery: [],
+  nades: [],
   showGallery: false,
+  showNadeWrapper: false,
   currentGame: "",
   currentGameItem: "",
   watchingDocID: "",
@@ -70,6 +82,12 @@ export const appSlice = createSlice({
     setAppCurrentGameItem(state: any, action: PayloadAction<string>) {
       state.currentGameItem = action.payload;
     },
+    setAppNades(state: any, action: PayloadAction<NadesProp[]>) {
+      state.nades = action.payload;
+    },
+    setAppShowNadeWrapper(state: any, action: PayloadAction<boolean>) {
+      state.showNadeWrapper = action.payload;
+    },
   },
 });
 
@@ -85,5 +103,7 @@ export const {
   setWatchingDocID,
   setAppCurrentGame,
   setAppCurrentGameItem,
+  setAppShowNadeWrapper,
+  setAppNades,
 } = appSlice.actions;
 export const appReducer = appSlice.reducer;

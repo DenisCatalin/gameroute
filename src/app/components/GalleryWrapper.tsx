@@ -11,22 +11,36 @@ import OpacityImage from "../utils/OpacityImage";
 import { useSelector, useDispatch } from "react-redux";
 import { setShowGallery } from "../redux/app.slice";
 import { useRouter } from "next/navigation";
+import { RootState } from "../redux/store";
 
 const GalleryWrapper = () => {
   const gallery = useSelector((state: any) => state.app.gallery);
+  const currentGame = useSelector((state: RootState) => state.app.currentGame);
   const showGallery = useSelector((state: any) => state.app.showGallery);
   const dispatch = useDispatch();
   const router = useRouter();
+
   const handleCloseGallery = () => {
     dispatch(setShowGallery(false));
-    router.back();
+    switch (currentGame) {
+      case "cs":
+        return;
+      case "gta":
+        router.push("/gta");
+      default:
+        return router.push("/");
+    }
   };
   return (
     <>
       {showGallery && (
-        <div className="z-1000 absolute top-0 left-0 w-full h-full bg-dark flex items-center justify-center">
+        <div
+          className={`z-1000 absolute top-0 left-0 w-full ${
+            currentGame === "cs" ? "h-screen" : "h-full"
+          } bg-dark flex items-center justify-center`}
+        >
           <button
-            className="absolute w-12 h-12 top-5 left-90percent bg-main shadow-normal rounded-small"
+            className="z-1000 absolute w-12 h-12 top-5 left-90percent bg-main shadow-normal rounded-small"
             onClick={handleCloseGallery}
           >
             X

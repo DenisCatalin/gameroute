@@ -85,7 +85,7 @@ const Snackbar = ({ title, message, open, onClose }: SnackbarProps) => {
     <>
       {open && (
         <motion.div
-          className={`${getBackground()} fixed top-snackbarTop left-2/6 2xsm:w-full 2xsm:h-28 sm:w-96 sm:h-24 p-4 text-light rounded-regular border-2 flex justify-between items-center ${getBorderColor()} ${
+          className={`${getBackground()} fixed top-snackbarTop left-2/6 2xsm:w-full 2xsm:h-28 sm:w-96 sm:max-h-32 p-4 text-light rounded-regular border-2 flex justify-between items-center ${getBorderColor()} ${
             open ? "z-50 opacity-100" : "-z-50 hidden"
           }`}
           onMouseEnter={() => {
@@ -107,7 +107,7 @@ const Snackbar = ({ title, message, open, onClose }: SnackbarProps) => {
             </div>
             <p className="text-md">{message}</p>
           </div>
-          <button className="font-bold" onClick={onClose}>
+          <button className="font-bold ml-2" onClick={onClose}>
             X
           </button>
         </motion.div>
