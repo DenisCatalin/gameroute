@@ -91,7 +91,7 @@ const AddNadePage = () => {
       showSnackbar("Error", "You need to select a position in order to upload a new nade");
       return;
     }
-    if (imageLinks.length === 0 && videoLink.length === 0) {
+    if (selectedImages.length === 0 && videoLink.length === 0) {
       showSnackbar(
         "Error",
         "You didn't add any video or images. Add some media in order to upload a new nade"

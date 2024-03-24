@@ -73,12 +73,12 @@ export const appRouter = router({
         return false;
       }
     }),
-  deleteNade: publicProcedure.input(z.object({ id: z.number() })).query(async (req: any) => {
-    const result = await db.delete(nades).where(eq(nades.nadeID, req.input.id)).returning();
-    if (result.length > 0) {
-      return result[0];
-    } else {
-      return null;
+  deleteNade: publicProcedure.input(z.object({ id: z.number() })).mutation(async (req: any) => {
+    try {
+      await db.delete(nades).where(eq(nades.nadeID, req.input.id)).returning();
+      return true;
+    } catch (err) {
+      console.error(err);
     }
   }),
   // getProductsByCategory: publicProcedure

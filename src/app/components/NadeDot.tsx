@@ -10,7 +10,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import ms from "ms";
 import NadeWrapper from "./NadeWrapper";
 import { useDispatch } from "react-redux";
-import { setAppNades, setAppShowNadeWrapper } from "../redux/app.slice";
+import { setAppNades, setAppShowNadeWrapper, setWatchingDocID } from "../redux/app.slice";
+import { formatTimeAgo } from "../utils/formatTime";
 
 export type PositionsProps = {
   top: number;
@@ -54,7 +55,7 @@ const NadeDot = ({ nadeData, type, team }: Props) => {
     //     "Gallery:",
     //     grenade.gallery !== "No images" ? JSON.parse(grenade.gallery) : grenade.gallery
     //   );
-    //   console.log("Created At:", ms(grenade.createdAt / 10000));
+    //   console.log("Created At:", formatTimeAgo(grenade.createdAt / 100000));
     //   console.log("----------------------");
     // });
     dispatch(setAppShowNadeWrapper(true));

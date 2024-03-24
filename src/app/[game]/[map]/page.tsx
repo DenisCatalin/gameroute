@@ -114,29 +114,48 @@ const CSRadarPage = () => {
 
   useEffect(() => {
     if (positionsFromDB) {
-      const filteredPositions = positionsFromDB
-        .filter(position =>
-          JSON.parse(position.nadeGrenades).some(
-            (grenade: any) =>
-              grenade.type === nade &&
-              position.nadeMap === map &&
-              (location === "All positions" || position.nadePosition === location) &&
-              (team === "All teams" || position.nadeTeam === team) &&
-              hardcodedPositions[position.nadeMap] &&
-              hardcodedPositions[position.nadeMap][position.nadePosition]
-          )
+      const filteredPositions = positionsFromDB.filter(position =>
+        JSON.parse(position.nadeGrenades).some(
+          (grenade: any) =>
+            grenade.type === nade &&
+            position.nadeMap === map &&
+            (location === "All positions" || position.nadePosition === location) &&
+            (team === "All teams" || position.nadeTeam === team) &&
+            hardcodedPositions[position.nadeMap] &&
+            hardcodedPositions[position.nadeMap][position.nadePosition]
         )
-        .map(position => ({
-          top: hardcodedPositions[position.nadeMap][position.nadePosition].top,
-          left: hardcodedPositions[position.nadeMap][position.nadePosition].left,
-          team: team,
-          grenades: JSON.parse(position.nadeGrenades).filter(
-            (grenade: any) => grenade.type === nade
-          ),
-          position: position.nadePosition,
-        }));
+      );
 
-      setPositions(filteredPositions);
+      const combinedPositions: {
+        [key: string]: {
+          top: string;
+          left: string;
+          team: string;
+          grenades: any[];
+          position: string;
+        };
+      } = {};
+
+      filteredPositions.forEach(position => {
+        const key = `${position.nadeMap}_${position.nadePosition}`;
+        if (!combinedPositions[key]) {
+          combinedPositions[key] = {
+            top: hardcodedPositions[position.nadeMap][position.nadePosition].top,
+            left: hardcodedPositions[position.nadeMap][position.nadePosition].left,
+            team: team,
+            grenades: [],
+            position: position.nadePosition,
+          };
+        }
+
+        combinedPositions[key].grenades.push(
+          ...JSON.parse(position.nadeGrenades).filter((grenade: any) => grenade.type === nade)
+        );
+      });
+
+      const combinedPositionsArray = Object.values(combinedPositions);
+
+      setPositions(combinedPositionsArray);
     }
   }, [nade, location, team, map, positionsFromDB]);
 
