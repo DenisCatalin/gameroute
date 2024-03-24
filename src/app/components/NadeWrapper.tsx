@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import OpacityImage from "../utils/OpacityImage";
 import { useSelector, useDispatch } from "react-redux";
 import {
   NadesProp,
@@ -56,7 +48,7 @@ const NadeWrapper = () => {
           <div className="w-full h-142 flex flex-wrap items-start gap-4 justify-start overflow-auto p-6 lg:w-full lg:h-148">
             {grenades.map((grenade: NadesProp, index: number) => (
               <div
-                className="w-96 h-72 bg-dark rounded-regular overflow-hidden flex items-center justify-center flex-col"
+                className="w-96 h-96 bg-dark rounded-regular overflow-hidden flex items-center justify-center flex-col"
                 key={index}
               >
                 <div className="w-full h-80">
@@ -74,29 +66,12 @@ const NadeWrapper = () => {
                   >
                     Gallery
                   </button>
-                  <h1 className="w-full h-full overflow-auto ml-4 text-center">
+                  <h1 className="w-full h-full overflow-auto ml-4 text-center flex items-center justify-center">
                     {grenade.description}
                   </h1>
                 </div>
               </div>
             ))}
-
-            {/* <Carousel className="w-full h-full flex items-center justify-center">
-              <CarouselContent>
-                {nadeGallery.map((photo: string, index: number) => (
-                  <CarouselItem
-                    key={index}
-                    className="flex items-center justify-center relative rounded-regular overflow-hidden"
-                  >
-                    <div className="w-142 h-142 rounded-regular lg:w-152 lg:h-148">
-                      <OpacityImage src={photo} fittment="contain" />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel> */}
           </div>
         </div>
       )}
