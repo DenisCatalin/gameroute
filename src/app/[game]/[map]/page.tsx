@@ -4,7 +4,7 @@ import { Maps, MapsState, hardcodedPositions } from "@/app/utils/constants";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
-import { setAppCurrentGame, setAppCurrentGameItem } from "@/app/redux/app.slice";
+import { NadesProp, setAppCurrentGame, setAppCurrentGameItem } from "@/app/redux/app.slice";
 import OpacityImage from "@/app/utils/OpacityImage";
 import Select from "@/app/interface/Select";
 import {
@@ -20,6 +20,7 @@ import {
 } from "@/app/utils/constants";
 import NadeDot from "@/app/components/NadeDot";
 import { trpc } from "@/app/_trpc/client";
+import NadeWrapper from "@/app/components/NadeWrapper";
 
 const Buttons = ["Molotov", "Smoke", "Flashbang", "Grenade"];
 const Teams = ["All teams", "CT", "T"];
@@ -116,7 +117,7 @@ const CSRadarPage = () => {
     if (positionsFromDB) {
       const filteredPositions = positionsFromDB.filter(position =>
         JSON.parse(position.nadeGrenades).some(
-          (grenade: any) =>
+          (grenade: NadesProp) =>
             grenade.type === nade &&
             position.nadeMap === map &&
             (location === "All positions" || position.nadePosition === location) &&
@@ -208,6 +209,7 @@ const CSRadarPage = () => {
           /> */}
         </div>
       </div>
+      <NadeWrapper nades={getNades} />
     </div>
   );
 };

@@ -20,7 +20,19 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import useSnackbar from "../hooks/useSnackbar";
 import AlertDialog from "../interface/AlertDialog";
 
-const NadeWrapper = () => {
+type Props = {
+  nades: any;
+};
+
+type Nades = {
+  nadeID: number;
+  nadeMap: string;
+  nadePosition: string;
+  nadeGrenades: string;
+  nadeTeam: string;
+};
+
+const NadeWrapper = ({ nades }: Props) => {
   const isAdmin = useSelector((state: RootState) => state.user.admin);
   const nadesWrapper = useSelector((state: RootState) => state.app.showNadeWrapper);
   const grenades = useSelector((state: RootState) => state.app.nades);
@@ -28,15 +40,13 @@ const NadeWrapper = () => {
 
   const { showSnackbar } = useSnackbar();
 
-  const nades = trpc.getNades.useQuery();
   const updateNadeQuery = trpc.updateNade.useMutation({
     onSettled: () => {
       nades.refetch();
     },
   });
 
-  const getNades = trpc.getNades.useQuery();
-  const positionsFromDB = getNades.data;
+  const positionsFromDB = nades.data;
 
   const handleCloseWrapper = () => {
     dispatch(setAppShowNadeWrapper(false));
@@ -74,10 +84,10 @@ const NadeWrapper = () => {
         }
       }
 
-      const currentRow = positionsFromDB.filter(item => item.nadeID === idOfRowWithVideo);
+      const currentRow = positionsFromDB.filter((item: Nades) => item.nadeID === idOfRowWithVideo);
 
       if (currentRow.length > 0) {
-        const updatedCurrentRow = currentRow.map(row => {
+        const updatedCurrentRow = currentRow.map((row: Nades) => {
           const grenades = JSON.parse(row.nadeGrenades).filter(
             (grenade: any) => grenade.video !== video
           );

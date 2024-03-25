@@ -12,6 +12,7 @@ import Loading from "../components/Loading";
 import { useRouter } from "next/navigation";
 import useSnackbar from "../hooks/useSnackbar";
 import { Locations } from "../utils/constants";
+import { RootState } from "../redux/store";
 
 type FormProps = {
   locationName: string;
@@ -33,7 +34,7 @@ const AddLocationPage = () => {
 
   const router = useRouter();
 
-  const user = useSelector((state: any) => state.user);
+  const user = useSelector((state: RootState) => state.user);
   const { showSnackbar } = useSnackbar();
 
   useEffect(() => {

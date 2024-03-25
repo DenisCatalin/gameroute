@@ -15,6 +15,7 @@ import { setUserAdminState, setUserDataState, setUserLoggedState } from "@/app/r
 import firebase from "../../lib/firebase";
 import OpacityImage from "@/app/utils/OpacityImage";
 import axios from "axios";
+import { RootState } from "@/app/redux/store";
 
 const Profile = () => {
   const [theme, setTheme] = useState<string>("System");
@@ -34,7 +35,7 @@ const Profile = () => {
 
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
-  const userRedux = useSelector((state: any) => state.user);
+  const userRedux = useSelector((state: RootState) => state.user);
 
   const checkAuth = async () => {
     try {

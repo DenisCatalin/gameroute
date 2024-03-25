@@ -3,16 +3,18 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAppCurrentGameItem } from "../redux/app.slice";
 import { useRouter } from "next/navigation";
+import { RootState } from "../redux/store";
 
 type Props = {
   name: string;
   logo: string;
   image: string;
+  countNades?: number;
 };
 
-const GameItem = ({ name, logo, image }: Props) => {
+const GameItem = ({ name, logo, image, countNades }: Props) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const currentGame = useSelector((state: any) => state.app.currentGame);
+  const currentGame = useSelector((state: RootState) => state.app.currentGame);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -25,6 +27,7 @@ const GameItem = ({ name, logo, image }: Props) => {
       router.push(`/${currentGame}/resources/${name.toLocaleLowerCase()}`);
     }
   };
+
   return (
     <>
       {currentGame === "cs" && (
@@ -43,7 +46,7 @@ const GameItem = ({ name, logo, image }: Props) => {
             <div className="relative w-40 h-40">
               <OpacityImage src={logo} fittment="contain" />
             </div>
-            <h1 className="font-bold text-light text-3xl text-center">255 NADES</h1>
+            <h1 className="font-bold text-light text-3xl text-center">{countNades} NADES</h1>
           </div>
         </div>
       )}

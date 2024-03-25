@@ -8,6 +8,7 @@ import firebase from "../lib/firebase";
 import { useRouter } from "next/navigation";
 import { setEditDocument, setEditDocumentID } from "../redux/edit.slice";
 import useSnackbar from "../hooks/useSnackbar";
+import { RootState } from "../redux/store";
 
 const EditLocationPage = () => {
   const [locationName, setLocationName] = useState<string>("");
@@ -17,7 +18,7 @@ const EditLocationPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const user = useSelector((state: any) => state.user);
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (!user.admin) {

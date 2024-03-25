@@ -63,11 +63,13 @@ const AddNadePage = () => {
   const [team, setTeam] = useState<string>("All teams");
 
   const nades = trpc.getNades.useQuery();
+
   const updateNadeQuery = trpc.updateNade.useMutation({
     onSettled: () => {
       nades.refetch();
     },
   });
+
   const addNadeQuery = trpc.addNade.useMutation({
     onSettled: () => {},
   });

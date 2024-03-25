@@ -14,9 +14,9 @@ import { useRouter } from "next/navigation";
 import { RootState } from "../redux/store";
 
 const GalleryWrapper = () => {
-  const gallery = useSelector((state: any) => state.app.gallery);
+  const gallery = useSelector((state: RootState) => state.app.gallery);
   const currentGame = useSelector((state: RootState) => state.app.currentGame);
-  const showGallery = useSelector((state: any) => state.app.showGallery);
+  const showGallery = useSelector((state: RootState) => state.app.showGallery);
   const dispatch = useDispatch();
   const router = useRouter();
 

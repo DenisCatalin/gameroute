@@ -14,6 +14,7 @@ import AddLocation from "../../addlocation/AddLocation";
 import { EditState } from "@/app/redux/edit.slice";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Locations } from "@/app/utils/constants";
+import { RootState } from "@/app/redux/store";
 
 type FormProps = {
   locationName: string;
@@ -23,8 +24,8 @@ type FormProps = {
 const Categories: string[] = ["Scrap", "Statues"];
 
 const EditLocationPage = () => {
-  const user = useSelector((state: any) => state.user);
-  const edit: EditState = useSelector((state: any) => state.edit);
+  const user = useSelector((state: RootState) => state.user);
+  const edit: EditState = useSelector((state: RootState) => state.edit);
   const { documentData } = edit;
 
   const { showSnackbar } = useSnackbar();

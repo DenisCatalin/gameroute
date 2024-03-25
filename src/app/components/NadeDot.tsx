@@ -7,11 +7,8 @@ import { SiStackblitz } from "react-icons/si";
 import { HiMiniCloud } from "react-icons/hi2";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import ms from "ms";
-import NadeWrapper from "./NadeWrapper";
 import { useDispatch } from "react-redux";
-import { setAppNades, setAppShowNadeWrapper, setWatchingDocID } from "../redux/app.slice";
-import { formatTimeAgo } from "../utils/formatTime";
+import { setAppNades, setAppShowNadeWrapper } from "../redux/app.slice";
 
 export type PositionsProps = {
   top: number;
@@ -47,17 +44,6 @@ const NadeDot = ({ nadeData, type, team }: Props) => {
   };
 
   const handleClick = () => {
-    // grenades.map((grenade: any) => {
-    //   console.log("Type:", grenade.type);
-    //   console.log("Description:", grenade.description);
-    //   console.log("Video:", grenade.video);
-    //   console.log(
-    //     "Gallery:",
-    //     grenade.gallery !== "No images" ? JSON.parse(grenade.gallery) : grenade.gallery
-    //   );
-    //   console.log("Created At:", formatTimeAgo(grenade.createdAt / 100000));
-    //   console.log("----------------------");
-    // });
     dispatch(setAppShowNadeWrapper(true));
     dispatch(setAppNades(grenades));
   };

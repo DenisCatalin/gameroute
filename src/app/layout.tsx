@@ -25,7 +25,6 @@ export default function RootLayout({
         <Providers>
           <main className="select-none relative transition-all bg-light font-main dark:bg-dark min-h-dvh w-full flex flex-col lg2:px-24 lg2:py-4">
             <SnackbarWrapper />
-            <NadeWrapper />
             <GalleryWrapper />
             <Header />
             {children}

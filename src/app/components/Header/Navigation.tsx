@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname } from "next/navigation";
+import { RootState } from "@/app/redux/store";
 
 type LinkProps = {
   content: string;
@@ -29,7 +30,7 @@ const Navigation = () => {
     dispatch(setAppCurrentPage(correctPage));
   }, []);
 
-  const currentPage = useSelector((state: any) => state.app.currentPage);
+  const currentPage = useSelector((state: RootState) => state.app.currentPage);
   const prefix = currentPage.includes("resources")
     ? currentPage.split("resources")[1]
     : currentPage;
