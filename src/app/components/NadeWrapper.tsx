@@ -62,9 +62,10 @@ const NadeWrapper = ({ nades }: Props) => {
     }
   }, [nadesWrapper]);
 
-  const openGallery = (images: any) => {
+  const openGallery = (images: string) => {
+    const parsedImages = JSON.parse(images);
     dispatch(setShowGallery(true));
-    dispatch(setAppGallery(images));
+    dispatch(setAppGallery(parsedImages));
   };
 
   const handleEdit = () => {};

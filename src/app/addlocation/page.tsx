@@ -1,7 +1,6 @@
 "use client";
 
 import React, { ChangeEvent, useEffect, useState } from "react";
-import AddLocation from "./AddLocation";
 import Input from "../interface/Input";
 import Select from "../interface/Select";
 import { useSelector } from "react-redux";
@@ -13,6 +12,8 @@ import { useRouter } from "next/navigation";
 import useSnackbar from "../hooks/useSnackbar";
 import { Locations } from "../utils/constants";
 import { RootState } from "../redux/store";
+import { CldUploadWidget } from "next-cloudinary";
+import { trpc } from "../_trpc/client";
 
 type FormProps = {
   locationName: string;
@@ -37,6 +38,17 @@ const AddLocationPage = () => {
   const user = useSelector((state: RootState) => state.user);
   const { showSnackbar } = useSnackbar();
 
+  const addLocationQuery = trpc.addLocation.useMutation({
+    onSettled: () => {
+      setUploadStatus(false);
+      showSnackbar("Success", "Location added successfully");
+      setForm({
+        locationName: "",
+        locationTag: "",
+      });
+    },
+  });
+
   useEffect(() => {
     if (!user.admin) {
       showSnackbar("Error", "You are not allowed to access this page");
@@ -45,15 +57,14 @@ const AddLocationPage = () => {
     }
   }, []);
 
-  const firestore = firebase.firestore();
-  const locationsRef = firestore.collection(resource.toLocaleLowerCase());
-  const query = locationsRef.orderBy("id");
-  //@ts-ignore
-  const [locations] = useCollectionData(query, { id: "id" });
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const tagsRef = firestore.collection("tags").doc("uocf8svMHC9Fed8i5yUN");
-
-  const onUpload = async () => {
+  const addLocation = async () => {
     if (form.locationName === "") {
       showSnackbar("Error", "You need to name the location in order to upload a new location");
       return;
@@ -65,93 +76,49 @@ const AddLocationPage = () => {
       );
       return;
     }
-    setUploadStatus(true);
-    showSnackbar("Notification", "Your images are uploading ...");
-    const formData = new FormData();
-    selectedImages.forEach((image: any) => {
-      formData.append("file", image);
-    });
-    formData.append("resource", resource);
-    formData.append("name", form.locationName);
-    try {
-      const response = await axios.post("/api/uploadCloudinary", formData);
-      if (response.data.error) {
-        showSnackbar("Error", response.data.error);
-        setUploadStatus(false);
-        return;
-      }
-      setTimeout(() => {
-        setImageLinks(response.data.uploadedImageUrls);
-      }, 2000);
-      showSnackbar("Success", "Your images have been successfully uploaded to the cloud");
-      setSelectedImages([]);
-    } catch (error) {
-      setUploadStatus(false);
-      showSnackbar("Error", "Upload failed");
+    if (imageLinks.length === 0) {
+      showSnackbar(
+        "Error",
+        "You need to upload at least one image in order to upload a new location"
+      );
+      return;
     }
-  };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
+    setUploadStatus(true);
+
+    addLocationQuery.mutate({
+      name: form.locationName,
+      tag: form.locationTag,
+      gallery: JSON.stringify(imageLinks),
+      type: resource,
     });
+    // if (!locations || imageLinks.length === 0) return;
+
+    // if (form.locationTag !== "") {
+    //   try {
+    //     const doc = await tagsRef.get();
+    //     if (doc.exists) {
+    //       const data = doc.data();
+    //       const tagsArray = data?.tags || [];
+
+    //       if (!tagsArray.includes(form.locationTag)) {
+    //         tagsArray.push(form.locationTag);
+    //         await tagsRef.update({ tags: tagsArray });
+    //         console.log("Document successfully updated!");
+    //       }
+    //     } else {
+    //       console.log("Document doesn't exist");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error getting document:", error);
+    //   }
+    // }
   };
-
-  useEffect(() => {
-    const addLocation = async () => {
-      if (!locations || imageLinks.length === 0) return;
-
-      if (form.locationTag !== "") {
-        try {
-          const doc = await tagsRef.get();
-          if (doc.exists) {
-            const data = doc.data();
-            const tagsArray = data?.tags || [];
-
-            if (!tagsArray.includes(form.locationTag)) {
-              tagsArray.push(form.locationTag);
-              await tagsRef.update({ tags: tagsArray });
-              console.log("Document successfully updated!");
-            }
-          } else {
-            console.log("Document doesn't exist");
-          }
-        } catch (error) {
-          console.error("Error getting document:", error);
-        }
-      }
-
-      try {
-        await locationsRef.add({
-          id: locations.length + 1,
-          locationName: form.locationName,
-          locationTag: form.locationTag,
-          resource: resource,
-          location: location,
-          thumbnailUrl: imageLinks[0],
-          gallery: imageLinks,
-        });
-        setUploadStatus(false);
-        showSnackbar("Success", "Location added successfully");
-        setForm({
-          locationName: "",
-          locationTag: "",
-        });
-      } catch (error) {
-        console.error(error);
-        setUploadStatus(false);
-        showSnackbar("Error", "Upload to Firebase failed");
-      }
-    };
-
-    addLocation();
-  }, [imageLinks]);
 
   return (
     <div className="w-full min-h-80dvh py-4 px-4 lg2:px-0 flex items-center justify-center flex-col">
       <div className="w-full h-auto flex items-center justify-center">
-        <div className="w-72 h-96 p-2">
+        <div className="w-72 h-64 p-2">
           <div className="w-full h-12 my-4">
             <Input
               placeholder="Location name"
@@ -177,10 +144,30 @@ const AddLocationPage = () => {
             <Select options={Locations} value={location} select={setLocation} />
           </div>
         </div>
-        <AddLocation setSelectedImages={setSelectedImages} selectedImages={selectedImages} />
+      </div>
+      <div className="w-72 h-24 flex items-center justify-center">
+        <CldUploadWidget
+          uploadPreset="dci9d6id"
+          onSuccess={(result, {}) => {
+            //@ts-ignore
+            setImageLinks(prev => [...prev, result?.info?.secure_url]);
+            showSnackbar("Success", "Your assets has been uploaded on cloud!");
+          }}
+        >
+          {({ open }) => {
+            return (
+              <button
+                onClick={() => open()}
+                className="w-full h-12 bg-main rounded-regular font-bold shadow-headerLightShadow text-light dark:shadow-headerDarkShadow"
+              >
+                UPLOAD ASSETS
+              </button>
+            );
+          }}
+        </CldUploadWidget>
       </div>
       <button
-        onClick={onUpload}
+        onClick={addLocation}
         className="bg-main text-light text-bold h-16 w-64 mt-6 text-xl rounded-regular shadow-headerLightShadow dark:shadow-headerDarkShadow"
       >
         {uploadStatus ? <Loading /> : "ADD LOCATION"}

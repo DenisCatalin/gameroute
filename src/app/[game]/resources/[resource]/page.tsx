@@ -8,49 +8,55 @@ import firebase from "@/app/lib/firebase";
 import Card from "@/app/components/Card";
 import OpacityImage from "@/app/utils/OpacityImage";
 import Select from "@/app/interface/Select";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import { trpc } from "@/app/_trpc/client";
 
 const ResourcesPage = () => {
   const params = useParams<{ resource: string }>();
   const router = useRouter();
+
   const { showSnackbar } = useSnackbar();
 
-  const firestore = firebase.firestore();
-  const scrapRef = firestore.collection(params.resource.toLocaleLowerCase());
-  const query = scrapRef.orderBy("id");
+  const resourceType = params.resource.charAt(0).toUpperCase() + params.resource.slice(1);
+
+  const getResources = trpc.getResourcesByType.useQuery({
+    type: resourceType.replaceAll("-", " "),
+  });
+  const resources = getResources.data;
+
+  console.log(resources);
+
   const [listOfTags, setListOfTags] = useState<string[]>([]);
   const [location, setLocation] = useState<string>("All locations");
   const [tag, setTag] = useState<string>("All tags");
 
-  //@ts-ignore
-  const [locations] = useCollectionData(query, { id: "id" });
-
-  const tagsRef = firestore.collection("tags").doc("uocf8svMHC9Fed8i5yUN");
-  tagsRef
-    .get()
-    .then(doc => {
-      if (doc.exists) {
-        const data = doc.data();
-        const tagsArray = data?.tags;
-        if (tagsArray.length > 0) {
-          setListOfTags(["All tags", ...tagsArray]);
-        }
-      } else {
-        console.log("Document doesn't exist");
-      }
-    })
-    .catch(error => {
-      console.error("Error getting document: ", error);
-    });
+  // const tagsRef = firestore.collection("tags").doc("uocf8svMHC9Fed8i5yUN");
+  // tagsRef
+  //   .get()
+  //   .then(doc => {
+  //     if (doc.exists) {
+  //       const data = doc.data();
+  //       const tagsArray = data?.tags;
+  //       if (tagsArray.length > 0) {
+  //         setListOfTags(["All tags", ...tagsArray]);
+  //       }
+  //     } else {
+  //       console.log("Document doesn't exist");
+  //     }
+  //   })
+  //   .catch(error => {
+  //     console.error("Error getting document: ", error);
+  //   });
 
   const filteredLocations =
     location === "All locations" && tag === "All tags"
-      ? locations
+      ? resources
       : location === "All locations"
-      ? locations?.filter((item: any) => item.locationTag === tag)
+      ? resources?.filter((item: any) => item.locationTag === tag)
       : tag === "All tags"
-      ? locations?.filter((item: any) => item.location === location)
-      : locations?.filter((item: any) => item.location === location && item.locationTag === tag);
+      ? resources?.filter((item: any) => item.location === location)
+      : resources?.filter((item: any) => item.location === location && item.locationTag === tag);
+
+  console.log(filteredLocations);
 
   useEffect(() => {
     if (!acceptedRouteNames.includes(params.resource)) {
@@ -74,13 +80,12 @@ const ResourcesPage = () => {
         <Select options={Locations} value={location} select={setLocation} styles="w-60" />
       </div>
       <div className="w-full h-128 flex flex-wrap p-2 gap-8 justify-center items-start overflow-auto">
-        {filteredLocations &&
+        {filteredLocations !== undefined &&
           filteredLocations.map((location: any, index: number) => (
             <React.Fragment key={index}>
               <Card
-                thumbnail={location.thumbnailUrl}
-                name={location.locationName}
-                gallery={location.gallery}
+                name={location.resourceName}
+                gallery={JSON.parse(location.resourceGallery)}
                 resource={params.resource}
               />
             </React.Fragment>

@@ -81,19 +81,42 @@ export const appRouter = router({
       console.error(err);
     }
   }),
-  // getProductsByCategory: publicProcedure
-  //   .input(z.object({ category: z.string() }))
-  //   .query(async (req: any) => {
-  //     const result = await db
-  //       .select()
-  //       .from(products)
-  //       .where(eq(products.productCategory, req.input.category));
-  //     if (result.length > 0) {
-  //       return result;
-  //     } else {
-  //       return null;
-  //     }
-  //   }),
+  addLocation: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        tag: z.string(),
+        type: z.string(),
+        gallery: z.string(),
+      })
+    )
+    .mutation(async opts => {
+      try {
+        await db.insert(resources).values({
+          resourceName: opts.input.name,
+          resourceTag: opts.input.tag,
+          resourceType: opts.input.type,
+          resourceGallery: opts.input.gallery,
+        });
+      } catch (err) {
+        console.error("Error", err);
+        return false;
+      }
+      return true;
+    }),
+  getResourcesByType: publicProcedure
+    .input(z.object({ type: z.string() }))
+    .query(async (req: any) => {
+      const result = await db
+        .select()
+        .from(resources)
+        .where(eq(resources.resourceType, req.input.type));
+      if (result.length > 0) {
+        return result;
+      } else {
+        return [];
+      }
+    }),
 });
 
 export type AppRouter = typeof appRouter;

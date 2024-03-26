@@ -10,7 +10,6 @@ import firebase from "../../lib/firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import Loading from "../../components/Loading";
 import { useRouter } from "next/navigation";
-import AddLocation from "../../addlocation/AddLocation";
 import { EditState } from "@/app/redux/edit.slice";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Locations } from "@/app/utils/constants";
@@ -213,7 +212,6 @@ const EditLocationPage = () => {
             <Select options={Locations} value={location} select={setLocation} />
           </div>
         </div>
-        <AddLocation setSelectedImages={setSelectedImages} selectedImages={selectedImages} />
       </div>
       <button
         onClick={onEdit}

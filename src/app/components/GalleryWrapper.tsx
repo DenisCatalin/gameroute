@@ -26,7 +26,7 @@ const GalleryWrapper = () => {
       case "cs":
         return;
       case "gta":
-        router.push("/gta");
+        router.back();
       default:
         return router.push("/");
     }
