@@ -11,7 +11,7 @@ const ITEMS: ItemsState[] = [
   {
     name: "Scrap",
     logo: "/static/scrap.png",
-    image: "/static/scrap.png",
+    image: "/static/scrapMetal.jpg",
   },
   {
     name: "Statues",
@@ -21,12 +21,12 @@ const ITEMS: ItemsState[] = [
   {
     name: "Treasures",
     logo: "/static/treasures.png",
-    image: "/static/treasures.png",
+    image: "/static/treasuresMask.jpg",
   },
   {
     name: "Animal-skins",
     logo: "/static/animal-skins.png",
-    image: "/static/animal-skins.png",
+    image: "/static/animalSkin.jpg",
   },
 ];
 

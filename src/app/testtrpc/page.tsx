@@ -13,7 +13,7 @@ type Props = {
 
 const TestTRPCpage = () => {
   const resources = trpc.getResources.useQuery();
-  // const deleteNade = trpc.deleteNade.useQuery({ id: 19 });
+  // const deleteNade = trpc.deleteNade.useMutation({ id: 30 });
   const nades = trpc.getNades.useQuery();
   const updateNadeQuery = trpc.updateNade.useMutation({
     onSettled: () => {

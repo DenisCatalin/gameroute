@@ -59,11 +59,11 @@ const GameItem = ({ name, logo, image, countNades }: Props) => {
         >
           <OpacityImage src={image} fittment="cover" />
           <div
-            className={`w-full h-full flex flex-col items-center justify-between p-6 rounded-regular absolute w-full h-full bg-cardHover top-0 left-0 transform ${
+            className={`w-full h-full flex flex-col items-center justify-between p-6 rounded-regular absolute w-full h-full bg-black/80 dark:bg-black/85 top-0 left-0 transform ${
               isHovered ? "" : "opacity-0"
             } transition-all duration-300 ease-in-out`}
           >
-            <div className="relative w-40 h-40">
+            <div className="relative w-24 h-24">
               <OpacityImage src={logo} fittment="contain" />
             </div>
             <h1 className="font-bold text-light text-3xl text-center">{name.toUpperCase()}</h1>

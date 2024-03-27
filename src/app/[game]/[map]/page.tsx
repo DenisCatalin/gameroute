@@ -205,7 +205,7 @@ const CSRadarPage = () => {
             </div>
           ))}
           {/* <div
-            className={`bg-dark top-66percent left-31percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
+            className={`bg-dark top-17percent left-36percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
           /> */}
         </div>
       </div>

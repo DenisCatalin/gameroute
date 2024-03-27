@@ -373,7 +373,7 @@ export const overpassPositions = [
   "Close Left",
   "Van",
   "Bank",
-  "Truck",
+  "Truck/Optimus",
   "Trash(Bins)",
   "Storage",
   "Heaven",
@@ -393,6 +393,7 @@ export const overpassPositions = [
   "Tracks",
   "Monster",
   "Alley",
+  "Dice/Default",
 ];
 
 export const hardcodedPositions: HardcodedPositions = {
@@ -596,6 +597,7 @@ export const hardcodedPositions: HardcodedPositions = {
     Tracks: { top: "50", left: "89" },
     Monster: { top: "43", left: "85.5" },
     Alley: { top: "65", left: "81" },
+    "Dice/Default": { top: "17", left: "36" },
   },
   Nuke_Upper: {
     Roof: { top: "55", left: "40.5" },
