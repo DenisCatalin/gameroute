@@ -29,7 +29,7 @@ const TestTRPCpage = () => {
   };
 
   const addNade = async () => {
-    const getCorrectNade = nades.data?.find((nadeItem: Props) => {
+    const getCorrectNade = nades.data?.find((nadeItem: any) => {
       return (
         nadeItem.nadeMap === "Anubis" &&
         nadeItem.nadePosition === "Heaven" &&
