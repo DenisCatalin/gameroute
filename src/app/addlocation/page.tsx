@@ -4,9 +4,6 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import Input from "../interface/Input";
 import Select from "../interface/Select";
 import { useSelector } from "react-redux";
-import axios from "axios";
-import firebase from "../lib/firebase";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation";
 import useSnackbar from "../hooks/useSnackbar";
@@ -25,7 +22,6 @@ const Categories: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
 const AddLocationPage = () => {
   const [resource, setCategory] = useState("Select the resource");
   const [location, setLocation] = useState("Select a location");
-  const [selectedImages, setSelectedImages] = useState<any[]>([]);
   const [uploadStatus, setUploadStatus] = useState<boolean>(false);
   const [imageLinks, setImageLinks] = useState<any[]>([]);
   const [form, setForm] = useState<FormProps>({
@@ -37,6 +33,11 @@ const AddLocationPage = () => {
 
   const user = useSelector((state: RootState) => state.user);
   const { showSnackbar } = useSnackbar();
+
+  const addTagsQuery = trpc.addTag.useMutation();
+  const updateTagsQuery = trpc.updateTag.useMutation();
+  const getResourcesTagsQuery = trpc.getResourcesTags.useQuery();
+  const tags = getResourcesTagsQuery?.data;
 
   const addLocationQuery = trpc.addLocation.useMutation({
     onSettled: () => {
@@ -86,33 +87,38 @@ const AddLocationPage = () => {
 
     setUploadStatus(true);
 
-    addLocationQuery.mutate({
-      name: form.locationName,
-      tag: form.locationTag,
-      gallery: JSON.stringify(imageLinks),
-      type: resource,
-    });
-    // if (!locations || imageLinks.length === 0) return;
+    try {
+      addLocationQuery.mutate({
+        name: form.locationName,
+        tag: form.locationTag,
+        location: location,
+        gallery: JSON.stringify(imageLinks),
+        type: resource,
+      });
 
-    // if (form.locationTag !== "") {
-    //   try {
-    //     const doc = await tagsRef.get();
-    //     if (doc.exists) {
-    //       const data = doc.data();
-    //       const tagsArray = data?.tags || [];
+      if (tags) {
+        const tagsArray = tags?.filter(tag => tag.tagResource === resource);
 
-    //       if (!tagsArray.includes(form.locationTag)) {
-    //         tagsArray.push(form.locationTag);
-    //         await tagsRef.update({ tags: tagsArray });
-    //         console.log("Document successfully updated!");
-    //       }
-    //     } else {
-    //       console.log("Document doesn't exist");
-    //     }
-    //   } catch (error) {
-    //     console.error("Error getting document:", error);
-    //   }
-    // }
+        if (tagsArray.length === 0) {
+          const firstTagListArray = [form.locationTag];
+          await addTagsQuery.mutate({
+            resource: resource,
+            list: JSON.stringify(firstTagListArray),
+          });
+        } else {
+          const list: string[] = JSON.parse(tagsArray[0].tagList);
+          if (!list?.includes(form.locationTag)) {
+            list.push(form.locationTag);
+            await updateTagsQuery.mutate({
+              id: tagsArray[0].tagID,
+              list: JSON.stringify(list),
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

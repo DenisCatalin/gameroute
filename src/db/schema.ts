@@ -40,6 +40,7 @@ export const resources = pgTable(
     resourceName: text("name"),
     resourceTag: text("tag"),
     resourceType: text("type"),
+    resourceLocation: text("location").notNull(),
     resourceGallery: text("gallery").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -57,11 +58,25 @@ export const nades = pgTable(
     nadeMap: text("map").notNull(),
     nadePosition: text("position").notNull(),
     nadeGrenades: text("grenades").notNull(),
-    nadeTeam: text("team").notNull(),
+    nadeTeam: text("team"),
   },
   nade => {
     return {
       uniqueIdx: uniqueIndex("unique_nade_idx").on(nade.nadeID),
+    };
+  }
+);
+
+export const gtaLocationsTags = pgTable(
+  "gtaLocationsTags",
+  {
+    tagID: serial("id").primaryKey(),
+    tagResource: text("resource").notNull(),
+    tagList: text("list").notNull(),
+  },
+  tag => {
+    return {
+      uniqueIdx: uniqueIndex("unique_gtaTag_idx").on(tag.tagID),
     };
   }
 );

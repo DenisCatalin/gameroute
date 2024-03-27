@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { Locations, acceptedRouteNames } from "@/app/utils/constants";
-import firebase from "@/app/lib/firebase";
 import Card from "@/app/components/Card";
 import OpacityImage from "@/app/utils/OpacityImage";
 import Select from "@/app/interface/Select";
@@ -23,40 +22,21 @@ const ResourcesPage = () => {
   });
   const resources = getResources.data;
 
-  console.log(resources);
-
-  const [listOfTags, setListOfTags] = useState<string[]>([]);
   const [location, setLocation] = useState<string>("All locations");
+  const [tagList, setTagList] = useState<string[]>(["All tags"]);
   const [tag, setTag] = useState<string>("All tags");
 
-  // const tagsRef = firestore.collection("tags").doc("uocf8svMHC9Fed8i5yUN");
-  // tagsRef
-  //   .get()
-  //   .then(doc => {
-  //     if (doc.exists) {
-  //       const data = doc.data();
-  //       const tagsArray = data?.tags;
-  //       if (tagsArray.length > 0) {
-  //         setListOfTags(["All tags", ...tagsArray]);
-  //       }
-  //     } else {
-  //       console.log("Document doesn't exist");
-  //     }
-  //   })
-  //   .catch(error => {
-  //     console.error("Error getting document: ", error);
-  //   });
+  const getResourcesTagsQuery = trpc.getResourcesTags.useQuery();
+  const tags = getResourcesTagsQuery?.data;
 
   const filteredLocations =
     location === "All locations" && tag === "All tags"
       ? resources
       : location === "All locations"
-      ? resources?.filter((item: any) => item.locationTag === tag)
+      ? resources?.filter(item => item.resourceTag === tag)
       : tag === "All tags"
-      ? resources?.filter((item: any) => item.location === location)
-      : resources?.filter((item: any) => item.location === location && item.locationTag === tag);
-
-  console.log(filteredLocations);
+      ? resources?.filter(item => item.resourceLocation === location)
+      : resources?.filter(item => item.resourceLocation === location && item.resourceTag === tag);
 
   useEffect(() => {
     if (!acceptedRouteNames.includes(params.resource)) {
@@ -67,6 +47,15 @@ const ResourcesPage = () => {
       );
     }
   }, []);
+
+  useEffect(() => {
+    if (tags) {
+      const tagListForResource = tags.filter(item => item.tagResource === resourceType);
+      const listOfTags = ["All tags", ...JSON.parse(tagListForResource[0].tagList)];
+      setTagList(listOfTags);
+    }
+  }, [tags]);
+
   return (
     <div className="w-full min-h-80dvh flex flex-col items-center justify-center p-4">
       <div className="w-full h-20 mb-6 flex items-center justify-between">
@@ -76,7 +65,7 @@ const ResourcesPage = () => {
           </div>
           <h1 className="font-bold text-2xl">{params.resource.toUpperCase()}</h1>
         </div>
-        <Select options={listOfTags} value={tag} select={setTag} styles="w-60" />
+        <Select options={tagList} value={tag} select={setTag} styles="w-60" />
         <Select options={Locations} value={location} select={setLocation} styles="w-60" />
       </div>
       <div className="w-full h-128 flex flex-wrap p-2 gap-8 justify-center items-start overflow-auto">

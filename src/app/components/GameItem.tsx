@@ -32,7 +32,7 @@ const GameItem = ({ name, logo, image, countNades }: Props) => {
     <>
       {currentGame === "cs" && (
         <div
-          className="transition mt-2 w-full h-80 rounded-regular relative flex flex-col items-center justify-between py-6 px-2 overflow-hidden cursor-pointer md3:w-14percent md3:h-80dvh sm:w-1/2 sm:w-49percent"
+          className="transition mt-2 w-full h-80 rounded-regular relative flex flex-col items-center justify-between py-6 px-2 overflow-hidden cursor-pointer shadow-headerLightShadow dark:shadow-headerDarkShadow md3:w-14percent md3:h-80dvh sm:w-1/2 sm:w-49percent"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={handleClick}
@@ -52,7 +52,7 @@ const GameItem = ({ name, logo, image, countNades }: Props) => {
       )}
       {currentGame === "gta" && (
         <div
-          className="transition mt-2 w-full h-80 rounded-regular relative flex flex-col items-center justify-between py-6 px-2 overflow-hidden cursor-pointer md3:w-24percent md3:h-80dvh sm:w-1/2 sm:w-49percent"
+          className="transition mt-2 w-full h-80 rounded-regular relative flex flex-col items-center justify-between py-6 px-2 overflow-hidden cursor-pointer shadow-headerLightShadow dark:shadow-headerDarkShadow md3:w-24percent md3:h-80dvh sm:w-1/2 sm:w-49percent"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={handleClick}

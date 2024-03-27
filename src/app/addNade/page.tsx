@@ -108,11 +108,6 @@ const AddNadePage = () => {
     }
   }, [map]);
 
-  useEffect(() => {
-    console.log(imageLinks);
-    console.log(videoLink);
-  }, [imageLinks, videoLink]);
-
   const addNade = async () => {
     if (map === "Choose a map") {
       showSnackbar("Error", "You need to select a map in order to upload a new nade");

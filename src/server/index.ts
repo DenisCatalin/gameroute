@@ -1,5 +1,5 @@
 import { publicProcedure, router } from "./trpc";
-import { nades, resources } from "@/db/schema";
+import { gtaLocationsTags, nades, resources } from "@/db/schema";
 import { sql } from "@vercel/postgres";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { z } from "zod";
@@ -21,6 +21,14 @@ export const appRouter = router({
   }),
   getResources: publicProcedure.query(async () => {
     const results = await db.select().from(resources);
+    if (results.length > 0) {
+      return results;
+    } else {
+      return [];
+    }
+  }),
+  getResourcesTags: publicProcedure.query(async () => {
+    const results = await db.select().from(gtaLocationsTags);
     if (results.length > 0) {
       return results;
     } else {
@@ -81,6 +89,14 @@ export const appRouter = router({
       console.error(err);
     }
   }),
+  deleteTag: publicProcedure.input(z.object({ id: z.number() })).query(async (req: any) => {
+    try {
+      await db.delete(gtaLocationsTags).where(eq(gtaLocationsTags.tagID, req.input.id)).returning();
+      return true;
+    } catch (err) {
+      console.error(err);
+    }
+  }),
   addLocation: publicProcedure
     .input(
       z.object({
@@ -88,6 +104,7 @@ export const appRouter = router({
         tag: z.string(),
         type: z.string(),
         gallery: z.string(),
+        location: z.string(),
       })
     )
     .mutation(async opts => {
@@ -97,6 +114,7 @@ export const appRouter = router({
           resourceTag: opts.input.tag,
           resourceType: opts.input.type,
           resourceGallery: opts.input.gallery,
+          resourceLocation: opts.input.location,
         });
       } catch (err) {
         console.error("Error", err);
@@ -115,6 +133,48 @@ export const appRouter = router({
         return result;
       } else {
         return [];
+      }
+    }),
+  addTag: publicProcedure
+    .input(
+      z.object({
+        resource: z.string(),
+        list: z.string(),
+      })
+    )
+    .mutation(async opts => {
+      try {
+        await db.insert(gtaLocationsTags).values({
+          tagResource: opts.input.resource,
+          tagList: opts.input.list,
+        });
+      } catch (err) {
+        console.error("Error", err);
+        return false;
+      }
+      return true;
+    }),
+  updateTag: publicProcedure
+    .input(z.object({ id: z.number(), list: z.string() }))
+    .input(
+      z.object({
+        id: z.number(),
+        list: z.string(),
+      })
+    )
+    .mutation(async opts => {
+      try {
+        await db
+          .update(gtaLocationsTags)
+          .set({
+            tagID: opts.input.id,
+            tagList: opts.input.list,
+          })
+          .where(eq(gtaLocationsTags.tagID, opts.input.id))
+          .returning();
+      } catch (err) {
+        console.error("Error", err);
+        return false;
       }
     }),
 });
