@@ -72,11 +72,7 @@ const ResourcesPage = () => {
         {filteredLocations !== undefined &&
           filteredLocations.map((location: any, index: number) => (
             <React.Fragment key={index}>
-              <Card
-                name={location.resourceName}
-                gallery={JSON.parse(location.resourceGallery)}
-                resource={params.resource}
-              />
+              <Card data={location} />
             </React.Fragment>
           ))}
       </div>

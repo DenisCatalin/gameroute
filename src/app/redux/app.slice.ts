@@ -1,6 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SnackbarState } from "../interface/Snackbar";
 
+export type ResourcesProps = {
+  resourceID: number;
+  resourceName: string;
+  resourceTag: string;
+  resourceType: string;
+  resourceLocation: string;
+  resourceGallery: string;
+};
+
 export type NadesProp = {
   type: string;
   description: string;
@@ -21,7 +30,7 @@ export type AppState = {
   currentGame: string;
   currentGameItem: string;
   gallery: string[];
-  watchingDocID: string;
+  watchingDocID: number;
 };
 
 const initialState: AppState = {
@@ -35,7 +44,7 @@ const initialState: AppState = {
   showNadeWrapper: false,
   currentGame: "",
   currentGameItem: "",
-  watchingDocID: "",
+  watchingDocID: 0,
   snackbar: {
     title: "",
     message: "",
@@ -73,7 +82,7 @@ export const appSlice = createSlice({
     setShowGallery(state: any, action: PayloadAction<boolean>) {
       state.showGallery = action.payload;
     },
-    setWatchingDocID(state: any, action: PayloadAction<string>) {
+    setWatchingDocID(state: any, action: PayloadAction<number>) {
       state.watchingDocID = action.payload;
     },
     setAppCurrentGame(state: any, action: PayloadAction<string>) {

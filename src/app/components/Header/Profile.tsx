@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaSun, FaHouse } from "react-icons/fa6";
+import { FaSun } from "react-icons/fa6";
 import { FaMoon } from "react-icons/fa";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdEditSquare } from "react-icons/md";
 import { CiLogin } from "react-icons/ci";
 import Dropdown from "@/app/interface/Dropdown/Dropdown";
 import { useRouter } from "next/navigation";
 import { HiDocumentAdd } from "react-icons/hi";
-import { GiColombianStatue, GiMetalGolemHead, GiTreasureMap } from "react-icons/gi";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserAdminState, setUserDataState, setUserLoggedState } from "@/app/redux/user.slice";
@@ -158,6 +157,12 @@ const Profile = () => {
             icon: <HiDocumentAdd className="mr-2 h-5 w-5" aria-hidden="true" />,
             activeIcon: <HiDocumentAdd className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
             onClick: () => router.push("/addlocation"),
+          },
+          {
+            content: "Edit location (GTA)",
+            icon: <MdEditSquare className="mr-2 h-5 w-5" aria-hidden="true" />,
+            activeIcon: <MdEditSquare className="mr-2 h-5 w-5 text-darkMain" aria-hidden="true" />,
+            onClick: () => router.push("/editlocation"),
           },
           {
             content: "Add nade (CS)",

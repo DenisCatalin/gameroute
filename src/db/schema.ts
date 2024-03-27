@@ -37,9 +37,9 @@ export const resources = pgTable(
   "resources",
   {
     resourceID: serial("id").primaryKey(),
-    resourceName: text("name"),
+    resourceName: text("name").notNull(),
     resourceTag: text("tag"),
-    resourceType: text("type"),
+    resourceType: text("type").notNull(),
     resourceLocation: text("location").notNull(),
     resourceGallery: text("gallery").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),

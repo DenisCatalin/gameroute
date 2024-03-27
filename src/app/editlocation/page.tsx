@@ -3,14 +3,16 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Input from "../interface/Input";
 import { useSelector, useDispatch } from "react-redux";
-import { setWatchingDocID } from "../redux/app.slice";
-import firebase from "../lib/firebase";
 import { useRouter } from "next/navigation";
-import { setEditDocument, setEditDocumentID } from "../redux/edit.slice";
 import useSnackbar from "../hooks/useSnackbar";
 import { RootState } from "../redux/store";
+import { trpc } from "../_trpc/client";
+import { setEditRowID } from "../redux/edit.slice";
 
 const EditLocationPage = () => {
+  const getResources = trpc.getResources.useQuery();
+  const resources = getResources.data;
+
   const [locationName, setLocationName] = useState<string>("");
 
   const { showSnackbar } = useSnackbar();
@@ -21,46 +23,30 @@ const EditLocationPage = () => {
   const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
+    if (user.data.displayName === "") return;
     if (!user.admin) {
       showSnackbar("Error", "You are not allowed to access this page");
       router.push("/");
       return;
     }
-  }, []);
-
-  const firestore = firebase.firestore();
-
-  async function getDocumentIdByFieldValue(field: string, value: any) {
-    try {
-      const querySnapshot = await firestore.collection("scrap").where(field, "==", value).get();
-      if (querySnapshot.empty) {
-        dispatch(setWatchingDocID(""));
-        return;
-      } else {
-        const document = querySnapshot.docs[0];
-        const data = document.data();
-        router.push(`/editlocation/${data.locationName}`);
-        dispatch(setWatchingDocID(document.id));
-        dispatch(setEditDocumentID(document.id));
-        dispatch(setEditDocument(data));
-        return;
-      }
-    } catch (error) {
-      console.error(`Error getting document with ${field} equal to ${value}:`, error);
-      return;
-    }
-  }
+  }, [user]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setLocationName(e.target.value);
   };
 
-  const searchForDocument = async () => {
-    try {
-      await getDocumentIdByFieldValue("locationName", locationName);
-    } catch (error) {
-      console.error(error);
-      return;
+  const searchForLocation = () => {
+    const location = resources?.filter(row => row.resourceName === locationName);
+    if (location) {
+      if (location?.length === 0) {
+        showSnackbar("Error", "No such location has been found with the given name.");
+        setLocationName("");
+        return;
+      }
+
+      showSnackbar("Success", "Location has been found");
+      dispatch(setEditRowID(location[0].resourceID));
+      router.push(`editlocation/${location[0].resourceName}`);
     }
   };
 
@@ -80,7 +66,7 @@ const EditLocationPage = () => {
         </div>
       </div>
       <button
-        onClick={searchForDocument}
+        onClick={searchForLocation}
         className="bg-main text-light text-bold h-16 w-64 mt-6 text-xl rounded-regular shadow-headerLightShadow dark:shadow-headerDarkShadow"
       >
         SEARCH FOR LOCATION

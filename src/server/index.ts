@@ -59,7 +59,6 @@ export const appRouter = router({
       return true;
     }),
   updateNade: publicProcedure
-    .input(z.object({ id: z.number(), grenades: z.string() }))
     .input(
       z.object({
         id: z.number(),
@@ -84,6 +83,14 @@ export const appRouter = router({
   deleteNade: publicProcedure.input(z.object({ id: z.number() })).mutation(async (req: any) => {
     try {
       await db.delete(nades).where(eq(nades.nadeID, req.input.id)).returning();
+      return true;
+    } catch (err) {
+      console.error(err);
+    }
+  }),
+  deleteResource: publicProcedure.input(z.object({ id: z.number() })).mutation(async (req: any) => {
+    try {
+      await db.delete(resources).where(eq(resources.resourceID, req.input.id)).returning();
       return true;
     } catch (err) {
       console.error(err);
@@ -122,6 +129,42 @@ export const appRouter = router({
       }
       return true;
     }),
+  editResource: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        tag: z.string(),
+        type: z.string(),
+        location: z.string(),
+      })
+    )
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        tag: z.string(),
+        type: z.string(),
+        location: z.string(),
+      })
+    )
+    .mutation(async opts => {
+      try {
+        await db
+          .update(resources)
+          .set({
+            resourceName: opts.input.name,
+            resourceTag: opts.input.tag,
+            resourceType: opts.input.type,
+            resourceLocation: opts.input.location,
+          })
+          .where(eq(resources.resourceID, opts.input.id))
+          .returning();
+      } catch (err) {
+        console.error("Error", err);
+        return false;
+      }
+    }),
   getResourcesByType: publicProcedure
     .input(z.object({ type: z.string() }))
     .query(async (req: any) => {
@@ -135,6 +178,14 @@ export const appRouter = router({
         return [];
       }
     }),
+  getLocationByID: publicProcedure.input(z.object({ id: z.number() })).query(async (req: any) => {
+    const result = await db.select().from(resources).where(eq(resources.resourceID, req.input.id));
+    if (result.length > 0) {
+      return result;
+    } else {
+      return -1;
+    }
+  }),
   addTag: publicProcedure
     .input(
       z.object({
