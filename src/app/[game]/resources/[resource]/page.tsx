@@ -51,7 +51,9 @@ const ResourcesPage = () => {
   useEffect(() => {
     if (tags) {
       const tagListForResource = tags.filter(item => item.tagResource === resourceType);
-      const listOfTags = ["All tags", ...JSON.parse(tagListForResource[0].tagList)];
+      const listOfTags = tagListForResource[0]
+        ? ["All tags", ...JSON.parse(tagListForResource[0].tagList)]
+        : ["All tags"];
       setTagList(listOfTags);
     }
   }, [tags]);

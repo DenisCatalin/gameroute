@@ -12,13 +12,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setShowGallery } from "../redux/app.slice";
 import { useRouter } from "next/navigation";
 import { RootState } from "../redux/store";
-import { MdEdit } from "react-icons/md";
 
 const GalleryWrapper = () => {
   const gallery = useSelector((state: RootState) => state.app.gallery);
   const currentGame = useSelector((state: RootState) => state.app.currentGame);
   const showGallery = useSelector((state: RootState) => state.app.showGallery);
-  const isAdmin = useSelector((state: RootState) => state.user.admin);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -47,11 +45,6 @@ const GalleryWrapper = () => {
           >
             X
           </button>
-          {isAdmin && (
-            <button className="z-1000 absolute w-12 h-12 top-15percent left-90percent bg-main rounded-small flex items-center justify-center hover:text-darkMain transition">
-              <MdEdit className="w-6 h-6 pointer-events-none" />
-            </button>
-          )}
           <div className="w-142 h-142 flex items-center justify-center lg:w-152 lg:h-148">
             <Carousel className="w-full h-full flex items-center justify-center">
               <CarouselContent>

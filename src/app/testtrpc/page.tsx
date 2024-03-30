@@ -3,14 +3,6 @@
 import React from "react";
 import { trpc } from "../_trpc/client";
 
-type Props = {
-  nadeID: number;
-  nadeMap: string;
-  nadePosition: string;
-  nadeGrenades: string;
-  nadeTeam: string;
-};
-
 const TestTRPCpage = () => {
   const resources = trpc.getResources.useQuery();
   // const deleteNade = trpc.deleteNade.useMutation({ id: 30 });

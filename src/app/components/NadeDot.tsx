@@ -4,16 +4,12 @@ import React from "react";
 import { FaFire } from "react-icons/fa";
 import { GiCornerExplosion } from "react-icons/gi";
 import { SiStackblitz } from "react-icons/si";
+import { MdOutlineGroups2 } from "react-icons/md";
 import { HiMiniCloud } from "react-icons/hi2";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useDispatch } from "react-redux";
 import { setAppNades, setAppShowNadeWrapper } from "../redux/app.slice";
-
-export type PositionsProps = {
-  top: number;
-  left: number;
-};
 
 type Props = {
   nadeData: any;
@@ -35,6 +31,11 @@ const NadeDot = ({ nadeData, type, team }: Props) => {
         return "border-red-500";
       case "Flashbang":
         return "border-main";
+      case "Execution":
+        return "border-yellow-400";
+      default: {
+        return "border-red-500";
+      }
     }
   };
 
@@ -58,12 +59,17 @@ const NadeDot = ({ nadeData, type, team }: Props) => {
               initial={{ opacity: 0 }}
               style={styles}
               onClick={handleClick}
-              className={`bg-dark rounded-full border-4 flex items-center justify-center ${getBorderColor()} absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
+              className={`bg-dark rounded-full border-4 flex items-center justify-center ${getBorderColor()} absolute transform -translate-x-1/2 -translate-y-1/2 ${
+                type === "Execution"
+                  ? "lg:w-24 lg:h-24 md:w-16 md:h-16 xsm:w-12 xsm:h-12"
+                  : "lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4"
+              } cursor-pointer hover:bg-black/80 transition`}
             >
               {type === "Grenade" && <GiCornerExplosion className="w-7 h-7 text-red-500" />}
               {type === "Molotov" && <FaFire className="w-7 h-7 text-orange-400" />}
               {type === "Flashbang" && <SiStackblitz className="w-7 h-7 text-main" />}
               {type === "Smoke" && <HiMiniCloud className="w-7 h-7 text-green-300" />}
+              {type === "Execution" && <MdOutlineGroups2 className="w-14 h-14 text-yellow-400" />}
             </motion.div>
           </TooltipTrigger>
           <TooltipContent>

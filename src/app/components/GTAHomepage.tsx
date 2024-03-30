@@ -16,7 +16,7 @@ const ITEMS: ItemsState[] = [
   {
     name: "Statues",
     logo: "/static/statues.png",
-    image: "/static/statues.png",
+    image: "/static/statuePhoto.jpg",
   },
   {
     name: "Treasures",

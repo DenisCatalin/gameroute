@@ -1,14 +1,7 @@
+import { HardcodedPositions, MapsState } from "./types";
+
 export const acceptedRouteNames: string[] = ["scrap", "statues", "treasures", "animal-skins"];
 export const acceptedRouteGames: string[] = ["cs", "gta"];
-
-type HardcodedPositions = {
-  [key: string]: {
-    [key: string]: {
-      top: string;
-      left: string;
-    };
-  };
-};
 
 export const Locations: string[] = [
   "All locations",
@@ -27,13 +20,6 @@ export const Locations: string[] = [
   "FZ",
   "Behind SAHP",
 ];
-
-export type MapsState = {
-  name: string;
-  logo: string;
-  image: string;
-  radar: string[];
-};
 
 export const Maps: MapsState[] = [
   {
@@ -116,6 +102,8 @@ export const anubisPositions = [
   "Tetris(upper)",
   "Top Mid",
   "Water",
+  "A Site",
+  "B Site",
 ];
 
 export const ancientPositions = [
@@ -147,6 +135,8 @@ export const ancientPositions = [
   "Single",
   "Triple",
   "Temple",
+  "A Site",
+  "B Site",
 ];
 
 export const nukePositionsUpper = [
@@ -180,6 +170,7 @@ export const nukePositionsUpper = [
   "Rafters",
   "Hut",
   "Tetris",
+  "A Site",
 ];
 
 export const nukePositionsLower = [
@@ -194,13 +185,13 @@ export const nukePositionsLower = [
   "Vents",
   "Black Halls",
   "Tunnels",
+  "B Site",
 ];
 
 export const vertigoPositionsUpper = [
   "All positions",
   "Connector",
   "Electric",
-  "Site B",
   "Back B (Quad)",
   "Catwalk (White)",
   "Stairs",
@@ -218,6 +209,7 @@ export const vertigoPositionsUpper = [
   "Elevator",
   "Double (Headshot)",
   "A Site",
+  "B Site",
   "Sandbags",
   "Lane (Yellow/Short)",
   "Scaffold",
@@ -260,7 +252,6 @@ export const infernoPositions = [
   "Truck A",
   "A Short",
   "Close Left",
-  "A Site",
   "Back Site",
   "Top Mid",
   "Bench",
@@ -292,6 +283,8 @@ export const infernoPositions = [
   "Arch",
   "Pool/Grill",
   "Porch/Roof",
+  "B Site",
+  "A Site",
 ];
 
 export const miragePositions = [
@@ -339,7 +332,6 @@ export const miragePositions = [
   "Boost Boxes",
   "Bench",
   "Forest",
-  "B Site",
   "Arches",
   "B Short",
   "E Box",
@@ -348,6 +340,8 @@ export const miragePositions = [
   "Window",
   "Sneaky",
   "Market",
+  "B Site",
+  "A Site",
 ];
 
 export const overpassPositions = [
@@ -394,6 +388,8 @@ export const overpassPositions = [
   "Monster",
   "Alley",
   "Dice/Default",
+  "A Site",
+  "B Site",
 ];
 
 export const hardcodedPositions: HardcodedPositions = {
@@ -426,6 +422,8 @@ export const hardcodedPositions: HardcodedPositions = {
     Ninja: { top: "52.5", left: "39.5" },
     CT: { top: "43", left: "28" },
     Sniper: { top: "30", left: "28.5" },
+    "B Site": { top: "50", left: "32" },
+    "A Site": { top: "26", left: "75" },
   },
   Ancient: {
     "Sniper Nest": { top: "25", left: "48" },
@@ -454,6 +452,8 @@ export const hardcodedPositions: HardcodedPositions = {
     Single: { top: "19", left: "12" },
     Temple: { top: "17", left: "27" },
     Triple: { top: "24", left: "32" },
+    "B Site": { top: "40", left: "85" },
+    "A Site": { top: "24", left: "27" },
   },
   Inferno: {
     Ledge: { top: "62", left: "29" },
@@ -472,7 +472,6 @@ export const hardcodedPositions: HardcodedPositions = {
     "Truck A": { top: "82.5", left: "80" },
     "A Short": { top: "80", left: "76" },
     "Porch/Roof": { top: "82.5", left: "71" },
-    "A Site": { top: "71", left: "83.5" },
     "Back Site": { top: "67", left: "80.5" },
     "Top Mid": { top: "70", left: "68" },
     Bench: { top: "67", left: "59.5" },
@@ -503,6 +502,8 @@ export const hardcodedPositions: HardcodedPositions = {
     Logs: { top: "51", left: "40" },
     "Boost A": { top: "76", left: "80" },
     "Pool/Grill": { top: "18", left: "56" },
+    "B Site": { top: "21", left: "48" },
+    "A Site": { top: "71", left: "83.5" },
   },
   Mirage: {
     CT: { top: "91", left: "41" },
@@ -547,7 +548,6 @@ export const hardcodedPositions: HardcodedPositions = {
     "Boost Boxes": { top: "16.5", left: "19" },
     Forest: { top: "14", left: "3.5" },
     Bench: { top: "19", left: "5" },
-    "B Site": { top: "20", left: "16" },
     Arches: { top: "20", left: "32" },
     "E Box": { top: "32", left: "27" },
     "Empty/Backsite": { top: "28", left: "16" },
@@ -555,6 +555,8 @@ export const hardcodedPositions: HardcodedPositions = {
     Window: { top: "35", left: "19" },
     Sneaky: { top: "45", left: "11" },
     Market: { top: "42", left: "18" },
+    "A Site": { top: "78", left: "56" },
+    "B Site": { top: "20", left: "16" },
   },
   Overpass: {
     "Upper Tunnels": { top: "74", left: "68" },
@@ -598,6 +600,8 @@ export const hardcodedPositions: HardcodedPositions = {
     Monster: { top: "43", left: "85.5" },
     Alley: { top: "65", left: "81" },
     "Dice/Default": { top: "17", left: "36" },
+    "A Site": { top: "20", left: "40" },
+    "B Site": { top: "30", left: "67" },
   },
   Nuke_Upper: {
     Roof: { top: "55", left: "40.5" },
@@ -629,6 +633,7 @@ export const hardcodedPositions: HardcodedPositions = {
     Rafters: { top: "39", left: "56" },
     Hut: { top: "57", left: "52" },
     Tetris: { top: "59", left: "54.5" },
+    "A Site": { top: "47", left: "56" },
   },
   Nuke_Lower: {
     Ramp: { top: "27", left: "55.7" },
@@ -641,11 +646,12 @@ export const hardcodedPositions: HardcodedPositions = {
     Vents: { top: "67.5", left: "55" },
     "Black Halls": { top: "72.5", left: "57" },
     Tunnels: { top: "81", left: "64" },
+    "B Site": { top: "30", left: "67" },
   },
   Vertigo_Upper: {
     Connector: { top: "23", left: "45.5" },
     Electric: { top: "17", left: "31.2" },
-    "Site B": { top: "17", left: "16.2" },
+    "B Site": { top: "17", left: "16.2" },
     "Back B (Quad)": { top: "6.5", left: "8" },
     "Catwalk (White)": { top: "25", left: "4.8" },
     Stairs: { top: "44", left: "11" },

@@ -1,14 +1,9 @@
 "use client";
 
 import { useSelector, useDispatch } from "react-redux";
-import {
-  NadesProp,
-  setAppGallery,
-  setAppShowNadeWrapper,
-  setShowGallery,
-} from "../redux/app.slice";
+import { setAppGallery, setAppShowNadeWrapper, setShowGallery } from "../redux/app.slice";
 import { RootState } from "../redux/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CldVideoPlayer } from "next-cloudinary";
 import "next-cloudinary/dist/cld-video-player.css";
 import { SlOptionsVertical } from "react-icons/sl";
@@ -19,17 +14,10 @@ import { FaCircleInfo } from "react-icons/fa6";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import useSnackbar from "../hooks/useSnackbar";
 import AlertDialog from "../interface/AlertDialog";
+import { NadeProps, NadesProp } from "../utils/types";
 
 type Props = {
   nades: any;
-};
-
-type Nades = {
-  nadeID: number;
-  nadeMap: string;
-  nadePosition: string;
-  nadeGrenades: string;
-  nadeTeam: string;
 };
 
 const NadeWrapper = ({ nades }: Props) => {
@@ -37,6 +25,7 @@ const NadeWrapper = ({ nades }: Props) => {
   const nadesWrapper = useSelector((state: RootState) => state.app.showNadeWrapper);
   const grenades = useSelector((state: RootState) => state.app.nades);
   const dispatch = useDispatch();
+  const [video, setVideo] = useState<string[] | string>("");
 
   const { showSnackbar } = useSnackbar();
 
@@ -68,8 +57,6 @@ const NadeWrapper = ({ nades }: Props) => {
     dispatch(setAppGallery(parsedImages));
   };
 
-  const handleEdit = () => {};
-
   const handleDelete = async (video: string) => {
     if (positionsFromDB) {
       let idOfRowWithVideo: number | null = null;
@@ -85,10 +72,12 @@ const NadeWrapper = ({ nades }: Props) => {
         }
       }
 
-      const currentRow = positionsFromDB.filter((item: Nades) => item.nadeID === idOfRowWithVideo);
+      const currentRow = positionsFromDB.filter(
+        (item: NadeProps) => item.nadeID === idOfRowWithVideo
+      );
 
       if (currentRow.length > 0) {
-        const updatedCurrentRow = currentRow.map((row: Nades) => {
+        const updatedCurrentRow = currentRow.map((row: NadeProps) => {
           const grenades = JSON.parse(row.nadeGrenades).filter(
             (grenade: any) => grenade.video !== video
           );
@@ -120,59 +109,114 @@ const NadeWrapper = ({ nades }: Props) => {
           </button>
           <div className="w-full h-142 flex flex-wrap items-start gap-4 justify-start overflow-auto p-6 lg:w-full lg:h-148">
             {grenades.map((grenade: NadesProp, index: number) => (
-              <div
-                className="w-96 h-96 bg-dark rounded-regular flex items-center justify-center flex-col"
-                key={index}
-              >
-                <div className="w-full h-80 rounded-t-regular overflow-hidden">
-                  <CldVideoPlayer
-                    id={grenade.video}
-                    width="1920"
-                    height="1080"
-                    src={grenade.video}
-                  />
-                </div>
-                <div className="w-full h-32 bg-coverDark rounded-b-regular flex items-center justify-between p-4">
-                  {grenade.gallery !== "No images" ? (
-                    <button
-                      className="w-32 h-12 bg-main rounded-regular font-bold"
-                      onClick={() => openGallery(grenade.gallery)}
+              <>
+                {grenade.video.includes('["') ? (
+                  JSON.parse(grenade.video).map((v: any, index: number) => (
+                    <div
+                      className="w-96 h-96 bg-dark rounded-regular flex items-center justify-center flex-col"
+                      key={index}
                     >
-                      Gallery
-                    </button>
-                  ) : (
-                    <h1 className="w-32 font-bold text-dark dark:text-light">No images</h1>
-                  )}
-                  <div className="">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <FaCircleInfo className="w-6 h-6" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="max-w-64">{grenade.description}</div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  {isAdmin && (
-                    <>
-                      <AlertDialog
-                        continueButton={() => handleDelete(grenade.video)}
-                        title="Are you sure you want to remove this nade?"
-                        description="You are about to remove this nade from this position."
-                        trigger={
+                      <div className="w-full h-80 rounded-t-regular overflow-hidden">
+                        <CldVideoPlayer id={v} width="1920" height="1080" src={v} />
+                      </div>
+                      <div className="w-full h-32 bg-coverDark rounded-b-regular flex items-center justify-between p-4">
+                        {grenade.gallery !== "No images" ? (
+                          <button
+                            className="w-32 h-12 bg-main rounded-regular font-bold"
+                            onClick={() => openGallery(grenade.gallery)}
+                          >
+                            Gallery
+                          </button>
+                        ) : (
+                          <h1 className="w-32 font-bold text-dark dark:text-light">No images</h1>
+                        )}
+                        <div className="">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <FaCircleInfo className="w-6 h-6" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <div className="max-w-64">{grenade.description}</div>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                        {isAdmin && (
                           <>
-                            <button className="flex items-center justify-center w-8 h-8 rounded-small hover:bg-offDark transition">
-                              <MdDelete className="h-6 w-6" aria-hidden="true" />
-                            </button>
+                            <AlertDialog
+                              continueButton={() => handleDelete(grenade.video)}
+                              title="Are you sure you want to remove this nade?"
+                              description="You are about to remove this nade from this position."
+                              trigger={
+                                <>
+                                  <button className="flex items-center justify-center w-8 h-8 rounded-small hover:bg-offDark transition">
+                                    <MdDelete className="h-6 w-6" aria-hidden="true" />
+                                  </button>
+                                </>
+                              }
+                            />
                           </>
-                        }
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div
+                    className="w-96 h-96 bg-dark rounded-regular flex items-center justify-center flex-col"
+                    key={index}
+                  >
+                    <div className="w-full h-80 rounded-t-regular overflow-hidden">
+                      <CldVideoPlayer
+                        id={grenade.video}
+                        width="1920"
+                        height="1080"
+                        src={grenade.video}
                       />
-                    </>
-                  )}
-                </div>
-              </div>
+                    </div>
+                    <div className="w-full h-32 bg-coverDark rounded-b-regular flex items-center justify-between p-4">
+                      {grenade.gallery !== "No images" ? (
+                        <button
+                          className="w-32 h-12 bg-main rounded-regular font-bold"
+                          onClick={() => openGallery(grenade.gallery)}
+                        >
+                          Gallery
+                        </button>
+                      ) : (
+                        <h1 className="w-32 font-bold text-dark dark:text-light">No images</h1>
+                      )}
+                      <div className="">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <FaCircleInfo className="w-6 h-6" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="max-w-64">{grenade.description}</div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      {isAdmin && (
+                        <>
+                          <AlertDialog
+                            continueButton={() => handleDelete(grenade.video)}
+                            title="Are you sure you want to remove this nade?"
+                            description="You are about to remove this nade from this position."
+                            trigger={
+                              <>
+                                <button className="flex items-center justify-center w-8 h-8 rounded-small hover:bg-offDark transition">
+                                  <MdDelete className="h-6 w-6" aria-hidden="true" />
+                                </button>
+                              </>
+                            }
+                          />
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
             ))}
           </div>
         </div>

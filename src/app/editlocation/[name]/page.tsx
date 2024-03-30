@@ -10,11 +10,7 @@ import useSnackbar from "@/app/hooks/useSnackbar";
 import { Locations } from "@/app/utils/constants";
 import { RootState } from "@/app/redux/store";
 import { trpc } from "@/app/_trpc/client";
-
-type FormProps = {
-  locationName: string;
-  locationTag: string;
-};
+import { AddResourceFormProps } from "@/app/utils/types";
 
 const Categories: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
 
@@ -35,7 +31,7 @@ const EditLocationPage = () => {
   const [location, setLocation] = useState("Select a location");
   const [status, setStatus] = useState<boolean>(false);
 
-  const [form, setForm] = useState<FormProps>({
+  const [form, setForm] = useState<AddResourceFormProps>({
     locationName: "",
     locationTag: "",
   });

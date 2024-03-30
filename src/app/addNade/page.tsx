@@ -21,14 +21,7 @@ import {
 } from "../utils/constants";
 import { trpc } from "../_trpc/client";
 import { CldUploadWidget } from "next-cloudinary";
-
-type Props = {
-  nadeID: number;
-  nadeMap: string;
-  nadePosition: string;
-  nadeGrenades: string;
-  nadeTeam: string;
-};
+import { NadeProps } from "../utils/types";
 
 const Maps = [
   "Anubis",
@@ -43,14 +36,14 @@ const Maps = [
 ];
 
 const Teams = ["All teams", "T", "CT"];
-const Nades = ["Molotov", "Smoke", "Grenade", "Flashbang"];
+const Nades = ["Molotov", "Smoke", "Grenade", "Flashbang", "Execution"];
 
 const AddNadePage = () => {
   const router = useRouter();
   const user = useSelector((state: RootState) => state.user);
   const { showSnackbar } = useSnackbar();
   const [description, setDescription] = useState<string>("");
-  const [videoLink, setVideoLink] = useState<string>("");
+  const [videoLinks, setVideoLinks] = useState<string[] | string>([]);
   const [imageLinks, setImageLinks] = useState<any[]>([]);
   const [uploadStatus, setUploadStatus] = useState<boolean>(false);
   const [nade, setNade] = useState<string>("Choose a nade");
@@ -117,7 +110,7 @@ const AddNadePage = () => {
       showSnackbar("Error", "You need to select a position in order to upload a new nade");
       return;
     }
-    if (imageLinks.length === 0 && videoLink.length === 0) {
+    if (imageLinks.length === 0 && videoLinks.length === 0) {
       showSnackbar(
         "Error",
         "You didn't add any video or images. Add some media in order to upload a new nade"
@@ -125,7 +118,7 @@ const AddNadePage = () => {
       return;
     }
     try {
-      const getCorrectNade = nades.data?.find((nadeItem: Props) => {
+      const getCorrectNade = nades.data?.find((nadeItem: NadeProps) => {
         return (
           nadeItem.nadeMap === map &&
           nadeItem.nadePosition === position &&
@@ -137,7 +130,12 @@ const AddNadePage = () => {
         const grenadeToAdd = {
           type: nade,
           description: description,
-          video: videoLink.length > 0 ? videoLink : "No video",
+          video:
+            nade === "Execution"
+              ? JSON.stringify(videoLinks)
+              : videoLinks.length > 0
+              ? videoLinks[0]
+              : "No video",
           gallery: imageLinks.length > 0 ? JSON.stringify(imageLinks) : "No images",
         };
         grenades.push(grenadeToAdd);
@@ -154,7 +152,12 @@ const AddNadePage = () => {
             {
               type: nade,
               description: description,
-              video: videoLink.length > 0 ? videoLink : "No video",
+              video:
+                nade === "Execution"
+                  ? JSON.stringify(videoLinks)
+                  : videoLinks.length > 0
+                  ? videoLinks[0]
+                  : "No video",
               gallery: imageLinks.length > 0 ? JSON.stringify(imageLinks) : "No images",
             },
           ]),
@@ -202,7 +205,7 @@ const AddNadePage = () => {
                 //@ts-ignore
                 if (result?.info?.format === "mp4") {
                   //@ts-ignore
-                  setVideoLink(result?.info?.public_id);
+                  setVideoLinks(prev => [...prev, result?.info?.public_id]);
                 } else if (
                   //@ts-ignore
                   result?.info?.format === "jpg" ||

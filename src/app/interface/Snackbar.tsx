@@ -6,17 +6,11 @@ import { IoIosWarning } from "react-icons/io";
 import { IoIosNotifications } from "react-icons/io";
 import { motion } from "framer-motion";
 
-export type SnackbarProps = {
+type SnackbarProps = {
   title: "Error" | "Success" | "Warning" | "Notification" | "";
   message: string;
   open: boolean;
   onClose: () => void;
-};
-
-export type SnackbarState = {
-  title: "Error" | "Success" | "Warning" | "Notification" | "";
-  message: string;
-  open: boolean;
 };
 
 const Snackbar = ({ title, message, open, onClose }: SnackbarProps) => {

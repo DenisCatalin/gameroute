@@ -1,24 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SnackbarState } from "../interface/Snackbar";
+import { NadesProp, SnackbarState } from "../utils/types";
 
-export type ResourcesProps = {
-  resourceID: number;
-  resourceName: string;
-  resourceTag: string;
-  resourceType: string;
-  resourceLocation: string;
-  resourceGallery: string;
-};
-
-export type NadesProp = {
-  type: string;
-  description: string;
-  video: string;
-  gallery: string;
-  createdAt: string;
-};
-
-export type AppState = {
+type AppState = {
   theme: string;
   navigation: boolean;
   currentPage: string;

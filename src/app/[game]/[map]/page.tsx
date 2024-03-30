@@ -1,10 +1,10 @@
 "use client";
 
-import { Maps, MapsState, hardcodedPositions } from "@/app/utils/constants";
+import { Maps, hardcodedPositions } from "@/app/utils/constants";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
-import { NadesProp, setAppCurrentGame, setAppCurrentGameItem } from "@/app/redux/app.slice";
+import { setAppCurrentGame, setAppCurrentGameItem } from "@/app/redux/app.slice";
 import OpacityImage from "@/app/utils/OpacityImage";
 import Select from "@/app/interface/Select";
 import {
@@ -21,8 +21,10 @@ import {
 import NadeDot from "@/app/components/NadeDot";
 import { trpc } from "@/app/_trpc/client";
 import NadeWrapper from "@/app/components/NadeWrapper";
+import { MdOutlineGroups2 } from "react-icons/md";
+import { MapsState, NadesProp } from "@/app/utils/types";
 
-const Buttons = ["Molotov", "Smoke", "Flashbang", "Grenade"];
+const Buttons = ["Molotov", "Smoke", "Flashbang", "Grenade", "Execution"];
 const Teams = ["All teams", "CT", "T"];
 
 const CSRadarPage = () => {
@@ -205,7 +207,11 @@ const CSRadarPage = () => {
             </div>
           ))}
           {/* <div
-            className={`bg-dark top-17percent left-36percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4 cursor-pointer hover:bg-coverLight transition`}
+            className={`bg-dark top-62percent left-87percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 ${
+              nade === "Execution"
+                ? "lg:w-24 lg:h-24 md:w-16 md:h-16 xsm:w-12 xsm:h-12"
+                : "lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4"
+            } cursor-pointer hover:bg-coverLight transition`}
           /> */}
         </div>
       </div>

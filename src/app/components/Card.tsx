@@ -1,13 +1,9 @@
 import React from "react";
 import OpacityImage from "../utils/OpacityImage";
 import { useDispatch } from "react-redux";
-import {
-  ResourcesProps,
-  setAppGallery,
-  setShowGallery,
-  setWatchingDocID,
-} from "../redux/app.slice";
+import { setAppGallery, setShowGallery, setWatchingDocID } from "../redux/app.slice";
 import { useRouter } from "next/navigation";
+import { ResourcesProps } from "../utils/types";
 
 type CardProps = {
   data: ResourcesProps;

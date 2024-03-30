@@ -11,11 +11,7 @@ import { Locations } from "../utils/constants";
 import { RootState } from "../redux/store";
 import { CldUploadWidget } from "next-cloudinary";
 import { trpc } from "../_trpc/client";
-
-type FormProps = {
-  locationName: string;
-  locationTag: string;
-};
+import { AddResourceFormProps } from "../utils/types";
 
 const Categories: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
 
@@ -24,7 +20,7 @@ const AddLocationPage = () => {
   const [location, setLocation] = useState("Select a location");
   const [uploadStatus, setUploadStatus] = useState<boolean>(false);
   const [imageLinks, setImageLinks] = useState<any[]>([]);
-  const [form, setForm] = useState<FormProps>({
+  const [form, setForm] = useState<AddResourceFormProps>({
     locationName: "",
     locationTag: "",
   });
