@@ -21,7 +21,6 @@ import {
 import NadeDot from "@/app/components/NadeDot";
 import { trpc } from "@/app/_trpc/client";
 import NadeWrapper from "@/app/components/NadeWrapper";
-import { MdOutlineGroups2 } from "react-icons/md";
 import { MapsState, NadesProp } from "@/app/utils/types";
 
 const Buttons = ["Molotov", "Smoke", "Flashbang", "Grenade", "Execution"];
