@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { Maps, MapsState } from "../utils/constants";
+import { Maps } from "../utils/constants";
 import GameItem from "./GameItem";
 import { trpc } from "../_trpc/client";
+import { MapsState } from "../utils/types";
 
 const CounterStrikeHomepage = () => {
   const getNades = trpc.getNades.useQuery();
