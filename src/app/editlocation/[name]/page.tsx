@@ -37,13 +37,12 @@ const EditLocationPage = () => {
   });
 
   useEffect(() => {
-    if (user.data.displayName === "") return;
-    if (!user.admin) {
+    if (user && user.adminPermissions.length === 0) {
       showSnackbar("Error", "You are not allowed to access this page");
       router.push("/");
       return;
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (searchID !== 0) {

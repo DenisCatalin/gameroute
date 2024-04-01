@@ -9,7 +9,7 @@ type UserData = {
 
 type UserState = {
   data: UserData;
-  admin: boolean;
+  adminPermissions: string[];
   logged: boolean;
 };
 
@@ -20,7 +20,7 @@ const initialState: UserState = {
     uid: "",
     photoURL: "",
   },
-  admin: false,
+  adminPermissions: [],
   logged: false,
 };
 
@@ -38,8 +38,8 @@ export const userSlice = createSlice({
       state.data = action.payload;
     },
 
-    setUserAdminState(state, action: PayloadAction<boolean>) {
-      state.admin = action.payload;
+    setUserPermissions(state, action: PayloadAction<string[]>) {
+      state.adminPermissions = action.payload;
     },
 
     setUserLoggedState(state, action: PayloadAction<boolean>) {
@@ -48,6 +48,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUserState, setUserDataState, setUserLoggedState, setUserAdminState } =
+export const { setUserState, setUserDataState, setUserLoggedState, setUserPermissions } =
   userSlice.actions;
 export const userReducer = userSlice.reducer;

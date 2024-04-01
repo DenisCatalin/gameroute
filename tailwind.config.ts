@@ -97,8 +97,8 @@ const config = {
         small: "5px",
       },
       colors: {
-        main: "rgb(35, 101, 186)",
-        darkMain: "rgb(18, 51, 94)",
+        main: "#c12868",
+        darkMain: "#6e163b",
         error: "rgba(210, 58, 58, 1)",
         success: "#229E2E",
         warning: "rgb(209, 155, 51)",

@@ -19,7 +19,7 @@ type Props = {
 };
 
 const NadeWrapper = ({ nades }: Props) => {
-  const isAdmin = useSelector((state: RootState) => state.user.admin);
+  const isAdmin = useSelector((state: RootState) => state.user.adminPermissions);
   const nadesWrapper = useSelector((state: RootState) => state.app.showNadeWrapper);
   const grenades = useSelector((state: RootState) => state.app.nades);
   const dispatch = useDispatch();
@@ -140,7 +140,7 @@ const NadeWrapper = ({ nades }: Props) => {
                             </Tooltip>
                           </TooltipProvider>
                         </div>
-                        {isAdmin && (
+                        {isAdmin.includes("full-access") && (
                           <>
                             <AlertDialog
                               continueButton={() => handleDelete(grenade.video)}
@@ -195,7 +195,7 @@ const NadeWrapper = ({ nades }: Props) => {
                           </Tooltip>
                         </TooltipProvider>
                       </div>
-                      {isAdmin && (
+                      {isAdmin.includes("full-access") && (
                         <>
                           <AlertDialog
                             continueButton={() => handleDelete(grenade.video)}

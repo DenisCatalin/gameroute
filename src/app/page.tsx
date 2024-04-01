@@ -1,9 +1,9 @@
 "use client";
 
 import { setAppCurrentGame } from "./redux/app.slice";
-import OpacityImage from "./utils/OpacityImage";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import OpacityImage from "./utils/OpacityImage";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ export default function Home() {
   };
 
   return (
-    <main className="transition w-full min-h-80dvh flex-col bg-light dark:bg-dark px-4 lg2:px-0 flex items-center justify-between md:flex-row">
+    <main className="transition w-full h-80dvh flex-col bg-light dark:bg-dark px-4 lg2:px-0 flex items-center justify-between md:flex-row">
       <div
         className="w-full h-96 mt-4 relative rounded-regular overflow-hidden group cursor-pointer shadow-headerLightShadow dark:shadow-headerDarkShadow md:w-1/2 md:h-80dvh md:mr-2"
         onClick={() => goToPage("gta")}

@@ -3,15 +3,11 @@
 import OpacityImage from "@/app/utils/OpacityImage";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setAppCurrentGame } from "@/app/redux/app.slice";
 
 const Logo = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch(setAppCurrentGame(""));
     router.push("/");
   };
 

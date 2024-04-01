@@ -19,10 +19,12 @@ const GamePage = () => {
   useEffect(() => {
     if (!acceptedRouteGames.includes(params.game)) {
       router.push("/");
-      showSnackbar(
-        "Error",
-        "This is not a valid route for any registered game. You have been redirected to the homepage"
-      );
+      if (params.game !== "dashboard") {
+        showSnackbar(
+          "Error",
+          "This is not a valid route for any registered game. You have been redirected to the homepage"
+        );
+      }
     } else {
       dispatch(setAppCurrentGame(params.game));
     }

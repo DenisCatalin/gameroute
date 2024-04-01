@@ -67,14 +67,14 @@ const AddNadePage = () => {
   });
 
   useEffect(() => {
-    if (user && !user.admin) {
+    if (user && user.adminPermissions.length === 0) {
       router.push("/");
       showSnackbar(
         "Error",
         "You are not allowed to see this page. This page can only be accessed by admins."
       );
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     switch (map) {

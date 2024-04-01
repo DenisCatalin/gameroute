@@ -9,7 +9,7 @@ type Props = {
   name: string;
   logo: string;
   image: string;
-  countNades?: number;
+  countNades?: number | React.ReactNode;
 };
 
 const GameItem = ({ name, logo, image, countNades }: Props) => {

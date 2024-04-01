@@ -47,12 +47,12 @@ const AddLocationPage = () => {
   });
 
   useEffect(() => {
-    if (!user.admin) {
+    if (user && user.adminPermissions.length === 0) {
       showSnackbar("Error", "You are not allowed to access this page");
       router.push("/");
       return;
     }
-  }, []);
+  }, [user]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
