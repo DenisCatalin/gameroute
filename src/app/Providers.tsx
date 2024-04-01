@@ -10,7 +10,7 @@ import { trpc } from "./_trpc/client";
 export function Providers({ children }: { children: React.ReactNode }) {
   const appUrl =
     process.env.NODE_ENV === "production"
-      ? process.env.PROD_APP_URL || "https://blackwater-nu.vercel.app/api/trpc"
+      ? process.env.PROD_APP_URL || "https://gameroute.vercel.app/api/trpc"
       : process.env.DEV_APP_URL || "http://localhost:3000/api/trpc";
   const [queryClient] = useState(() => new QueryClient({}));
   const [trpcClient] = useState(() =>
