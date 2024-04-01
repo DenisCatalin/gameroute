@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./Providers";
 import SnackbarWrapper from "./components/SnackbarWrapper";
 import Header from "./components/Header/Header";
 import GalleryWrapper from "./components/GalleryWrapper";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "GameRoute - Homepage",
