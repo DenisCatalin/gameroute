@@ -100,7 +100,7 @@ const NadeWrapper = ({ nades }: Props) => {
       {nadesWrapper && (
         <div className="z-1000 absolute top-0 left-0 w-full h-screen backdrop-blur bg-blurBgLight dark:bg-blurBgDark flex items-start justify-start px-6">
           <button
-            className="absolute w-12 h-12 top-5 left-90percent bg-main shadow-normal rounded-small"
+            className="absolute w-12 h-12 top-5 left-90percent bg-main shadow-normal rounded-small text-light"
             onClick={handleCloseWrapper}
           >
             X
@@ -172,7 +172,7 @@ const NadeWrapper = ({ nades }: Props) => {
                         src={grenade.video}
                       />
                     </div>
-                    <div className="w-full h-32 bg-coverDark rounded-b-regular flex items-center justify-between p-4">
+                    <div className="w-full h-32 bg-coverLight dark:bg-coverDark rounded-b-regular flex items-center justify-between p-4">
                       {grenade.gallery !== "No images" ? (
                         <button
                           className="w-32 h-12 bg-main rounded-regular font-bold"
@@ -187,7 +187,7 @@ const NadeWrapper = ({ nades }: Props) => {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
-                              <FaCircleInfo className="w-6 h-6" />
+                              <FaCircleInfo className="w-6 h-6 text-dark dark:text-light" />
                             </TooltipTrigger>
                             <TooltipContent>
                               <div className="max-w-64">{grenade.description}</div>
@@ -203,7 +203,7 @@ const NadeWrapper = ({ nades }: Props) => {
                             description="You are about to remove this nade from this position."
                             trigger={
                               <>
-                                <button className="flex items-center justify-center w-8 h-8 rounded-small hover:bg-offDark transition">
+                                <button className="text-dark dark:text-light flex items-center justify-center w-8 h-8 rounded-small hover:bg-offDark transition">
                                   <MdDelete className="h-6 w-6" aria-hidden="true" />
                                 </button>
                               </>

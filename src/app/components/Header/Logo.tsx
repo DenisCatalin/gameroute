@@ -20,8 +20,8 @@ const Logo = () => {
         <OpacityImage src={"/static/logo.png"} fittment="contain" />
       </div>
       <div className="w-auto h-auto flex flex-col items-start">
-        <p className="text-dark dark:text-light text-xl font-bold hidden lg:block">
-          Game<span className="text-main font-bold">Route</span>
+        <p className="text-dark dark:text-light text-xl hidden lg:block drop-shadow-logo">
+          Game<span className="text-main">Route</span>
         </p>
       </div>
     </div>

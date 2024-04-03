@@ -160,7 +160,7 @@ const AddLocationPage = () => {
             return (
               <button
                 onClick={() => open()}
-                className="w-full h-12 bg-main rounded-regular font-bold shadow-headerLightShadow text-light dark:shadow-headerDarkShadow"
+                className="w-full h-12 bg-main rounded-regular shadow-headerLightShadow text-light dark:shadow-headerDarkShadow"
               >
                 UPLOAD ASSETS
               </button>

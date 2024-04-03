@@ -44,7 +44,7 @@ const config = {
         "2xs": "0.65rem",
       },
       fontFamily: {
-        main: '"Inria Sans", sans-serif',
+        kanit: ["var(--font-kanit)"],
       },
       spacing: {
         "60vh": "60vh",
@@ -72,6 +72,9 @@ const config = {
         "6rem": "6rem",
         snackbarTop: "85%",
         ...customSpacing,
+      },
+      dropShadow: {
+        logo: "0 1px 5px rgba(193, 40, 104, .25)",
       },
       zIndex: {
         "1000": "1000",
@@ -116,6 +119,7 @@ const config = {
         offLight: "rgba(0, 0, 0, .1)",
         blurBgDark: "rgba(0, 0, 0, .4)",
         blurBgLight: "rgba(255, 255, 255, .4)",
+        flashbang: "rgb(35, 101, 186)",
       },
       keyframes: {
         "accordion-down": {

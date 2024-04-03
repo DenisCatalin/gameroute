@@ -30,7 +30,7 @@ const NadeDot = ({ nadeData, type, team }: Props) => {
       case "Grenade":
         return "border-red-500";
       case "Flashbang":
-        return "border-main";
+        return "border-flashbang";
       case "Execution":
         return "border-yellow-400";
       default: {
@@ -67,7 +67,7 @@ const NadeDot = ({ nadeData, type, team }: Props) => {
             >
               {type === "Grenade" && <GiCornerExplosion className="w-7 h-7 text-red-500" />}
               {type === "Molotov" && <FaFire className="w-7 h-7 text-orange-400" />}
-              {type === "Flashbang" && <SiStackblitz className="w-7 h-7 text-main" />}
+              {type === "Flashbang" && <SiStackblitz className="w-7 h-7 text-flashbang" />}
               {type === "Smoke" && <HiMiniCloud className="w-7 h-7 text-green-300" />}
               {type === "Execution" && <MdOutlineGroups2 className="w-14 h-14 text-yellow-400" />}
             </motion.div>

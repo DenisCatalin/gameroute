@@ -4,6 +4,13 @@ import Providers from "./Providers";
 import SnackbarWrapper from "./components/SnackbarWrapper";
 import Header from "./components/Header/Header";
 import GalleryWrapper from "./components/GalleryWrapper";
+import { Poppins } from "@next/font/google";
+
+const kanit = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-kanit",
+});
 
 export const metadata: Metadata = {
   title: "GameRoute - Homepage",
@@ -25,7 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="select-none relative transition-all bg-light font-main dark:bg-dark min-h-dvh w-full flex flex-col lg2:px-24 lg2:py-4">
+      <body
+        className={`select-none relative transition-all bg-light dark:bg-dark min-h-dvh w-full flex flex-col lg2:px-24 lg2:py-4 ${kanit.className}`}
+      >
         <link rel="icon" href="/static/favicon.png" sizes="any" />
         <Providers>
           <main>

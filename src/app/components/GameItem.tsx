@@ -46,7 +46,12 @@ const GameItem = ({ name, logo, image, countNades }: Props) => {
             <div className="relative w-40 h-40">
               <OpacityImage src={logo} fittment="contain" />
             </div>
-            <h1 className="font-bold text-light text-3xl text-center">{countNades} NADES</h1>
+            <h1 className="text-light text-3xl text-center">
+              <span className={`${countNades === 0 ? "text-light" : "text-main"} font-semibold`}>
+                {countNades}
+              </span>{" "}
+              {countNades === 1 ? "NADE" : "NADES"}
+            </h1>
           </div>
         </div>
       )}
