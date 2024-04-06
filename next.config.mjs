@@ -21,6 +21,7 @@ const nextConfig = {
     ];
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       { hostname: "res.cloudinary.com" },
       { hostname: "lh3.googleusercontent.com" },
