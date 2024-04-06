@@ -7,12 +7,12 @@ import { useSelector } from "react-redux";
 import Loading from "../../components/Loading";
 import { useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
-import { Locations } from "@/app/utils/constants";
+import { StatuesLocations, ScrapLocations } from "@/app/utils/constants";
 import { RootState } from "@/app/redux/store";
 import { trpc } from "@/app/_trpc/client";
 import { AddResourceFormProps } from "@/app/utils/types";
 
-const Categories: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
+const Resources: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
 
 const EditLocationPage = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -27,7 +27,8 @@ const EditLocationPage = () => {
   const { showSnackbar } = useSnackbar();
 
   const [fetched, setFetched] = useState<boolean>(false);
-  const [resource, setCategory] = useState("Select a resource");
+  const [resourcesLocations, setResourcesLocations] = useState<string[]>([""]);
+  const [resource, setResource] = useState("Select a resource");
   const [location, setLocation] = useState("Select a location");
   const [status, setStatus] = useState<boolean>(false);
 
@@ -48,7 +49,7 @@ const EditLocationPage = () => {
     if (searchID !== 0) {
       if (data && data !== -1 && data.length > 0) {
         setFetched(true);
-        setCategory(data[0].resourceType);
+        setResource(data[0].resourceType);
         setForm({
           locationName: data[0].resourceName,
           locationTag: data[0].resourceTag || "",
@@ -57,6 +58,32 @@ const EditLocationPage = () => {
       }
     }
   }, [searchID, data]);
+
+  useEffect(() => {
+    const index = StatuesLocations.indexOf("All locations");
+    switch (resource) {
+      case "Scrap": {
+        setResourcesLocations(ScrapLocations);
+        return;
+      }
+      case "Statues": {
+        setResourcesLocations(StatuesLocations.splice(index, 1));
+        return;
+      }
+      case "Treasures": {
+        // setResourcesLocations(TreasuresLocations);
+        return;
+      }
+      case "Animal skins": {
+        // setResourcesLocations(AnimalsLocations);
+        return;
+      }
+      default: {
+        setResourcesLocations([]);
+        return;
+      }
+    }
+  }, [resource]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -131,10 +158,10 @@ const EditLocationPage = () => {
                 />
               </div>
               <div className="w-full h-12">
-                <Select options={Categories} value={resource} select={setCategory} />
+                <Select options={Resources} value={resource} select={setResource} />
               </div>
               <div className="w-full h-12">
-                <Select options={Locations} value={location} select={setLocation} />
+                <Select options={resourcesLocations} value={location} select={setLocation} />
               </div>
             </div>
           </div>

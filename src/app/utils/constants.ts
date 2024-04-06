@@ -3,22 +3,43 @@ import { HardcodedPositions, MapsState } from "./types";
 export const acceptedRouteNames: string[] = ["scrap", "statues", "treasures", "animal-skins"];
 export const acceptedRouteGames: string[] = ["cs", "gta"];
 
-export const Locations: string[] = [
+export const StatuesLocations: string[] = [
   "All locations",
-  "Calafia",
-  "Sawmill",
-  "Timber tunnel",
-  "Gino's place",
-  "First bridge",
-  "Second bridge",
-  "Plane",
-  "Epsylon",
-  "Farm",
-  "Chilliad",
-  "Ranch",
-  "Paleto",
-  "FZ",
-  "Behind SAHP",
+  "Cassidy Creek",
+  "Alamo sea",
+  "Raton Canyon",
+  "Lago Zancudo",
+  "Mount Josiah",
+  "Chiliad Mountain State Wilderness",
+  "Fort Zancudo",
+  "Mount Chiliad",
+  "North Chumash",
+  "Great Chaparral",
+  "Sandy Shores",
+  "Grapeseed",
+  "Paleto Bay",
+  "Pacific Ocean",
+  "San Chianski Mountain Range",
+  "Tongva Hills",
+  "Zancudo River",
+  "Tongva Valley",
+  "Ron Alternates Wind Farm",
+  "Mount Gordo",
+  "Grand Senora Desert",
+  "Palmer-Taylor Power Station",
+  "Davis Quartz",
+  "Paleto Forest",
+];
+
+export const ScrapLocations: string[] = [
+  "All locations",
+  "Cassidy Creek",
+  "Mount Chiliad",
+  "Raton canyon",
+  "Mount Gordo",
+  "Paleto Forest",
+  "Paleto Bay",
+  "Chiliad Mountain State Wilderness",
 ];
 
 export const Maps: MapsState[] = [

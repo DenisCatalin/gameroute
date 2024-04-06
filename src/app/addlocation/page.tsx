@@ -7,16 +7,17 @@ import { useSelector } from "react-redux";
 import Loading from "../components/Loading";
 import { useRouter } from "next/navigation";
 import useSnackbar from "../hooks/useSnackbar";
-import { Locations } from "../utils/constants";
+import { StatuesLocations, ScrapLocations } from "../utils/constants";
 import { RootState } from "../redux/store";
 import { CldUploadWidget } from "next-cloudinary";
 import { trpc } from "../_trpc/client";
 import { AddResourceFormProps } from "../utils/types";
 
-const Categories: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
+const Resources: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
 
 const AddLocationPage = () => {
-  const [resource, setCategory] = useState("Select the resource");
+  const [resourcesLocations, setResourcesLocations] = useState<string[]>([""]);
+  const [resource, setResource] = useState("Select the resource");
   const [location, setLocation] = useState("Select a location");
   const [uploadStatus, setUploadStatus] = useState<boolean>(false);
   const [imageLinks, setImageLinks] = useState<any[]>([]);
@@ -39,12 +40,42 @@ const AddLocationPage = () => {
     onSettled: () => {
       setUploadStatus(false);
       showSnackbar("Success", "Location added successfully");
+      setResource("Select the resource");
+      setLocation("Select a location");
+      setImageLinks([]);
       setForm({
         locationName: "",
         locationTag: "",
       });
     },
   });
+
+  useEffect(() => {
+    switch (resource) {
+      case "Scrap": {
+        const filteredLocations = ScrapLocations.filter(location => location !== "All locations");
+        setResourcesLocations(filteredLocations);
+        return;
+      }
+      case "Statues": {
+        const filteredLocations = StatuesLocations.filter(location => location !== "All locations");
+        setResourcesLocations(filteredLocations);
+        return;
+      }
+      case "Treasures": {
+        // setResourcesLocations(TreasuresLocations);
+        return;
+      }
+      case "Animal skins": {
+        // setResourcesLocations(AnimalsLocations);
+        return;
+      }
+      default: {
+        setResourcesLocations([]);
+        return;
+      }
+    }
+  }, [resource]);
 
   useEffect(() => {
     if (user && user.adminPermissions.length === 0) {
@@ -140,10 +171,10 @@ const AddLocationPage = () => {
             />
           </div>
           <div className="w-full h-12">
-            <Select options={Categories} value={resource} select={setCategory} />
+            <Select options={Resources} value={resource} select={setResource} />
           </div>
           <div className="w-full h-12">
-            <Select options={Locations} value={location} select={setLocation} />
+            <Select options={resourcesLocations} value={location} select={setLocation} />
           </div>
         </div>
       </div>

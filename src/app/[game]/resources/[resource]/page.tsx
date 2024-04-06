@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
-import { Locations, acceptedRouteNames } from "@/app/utils/constants";
+import { StatuesLocations, ScrapLocations, acceptedRouteNames } from "@/app/utils/constants";
 import Card from "@/app/components/Card";
 import OpacityImage from "@/app/utils/OpacityImage";
 import Select from "@/app/interface/Select";
@@ -22,6 +22,7 @@ const ResourcesPage = () => {
   });
   const resources = getResources.data;
 
+  const [resourcesLocations, setResourcesLocations] = useState<string[]>([""]);
   const [location, setLocation] = useState<string>("All locations");
   const [tagList, setTagList] = useState<string[]>(["All tags"]);
   const [tag, setTag] = useState<string>("All tags");
@@ -49,6 +50,31 @@ const ResourcesPage = () => {
   }, []);
 
   useEffect(() => {
+    switch (params.resource) {
+      case "scrap": {
+        setResourcesLocations(ScrapLocations);
+        return;
+      }
+      case "statues": {
+        setResourcesLocations(StatuesLocations);
+        return;
+      }
+      case "treasures": {
+        // setResourcesLocations(TreasuresLocations);
+        return;
+      }
+      case "animal-skins": {
+        // setResourcesLocations(AnimalsLocations);
+        return;
+      }
+      default: {
+        setResourcesLocations([]);
+        return;
+      }
+    }
+  }, [params.resource]);
+
+  useEffect(() => {
     if (tags) {
       const tagListForResource = tags.filter(item => item.tagResource === resourceType);
       const listOfTags = tagListForResource[0]
@@ -68,7 +94,7 @@ const ResourcesPage = () => {
           <h1 className="font-bold text-2xl">{params.resource.toUpperCase()}</h1>
         </div>
         <Select options={tagList} value={tag} select={setTag} styles="w-60" />
-        <Select options={Locations} value={location} select={setLocation} styles="w-60" />
+        <Select options={resourcesLocations} value={location} select={setLocation} styles="w-60" />
       </div>
       <div className="w-full h-128 flex flex-wrap p-2 gap-8 justify-center items-start overflow-auto">
         {filteredLocations !== undefined &&
