@@ -28,7 +28,7 @@ const GalleryWrapper = () => {
       case "gta":
         router.back();
       default:
-        return router.push("/");
+        return;
     }
   };
   return (

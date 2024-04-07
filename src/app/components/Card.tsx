@@ -4,12 +4,14 @@ import { useDispatch } from "react-redux";
 import { setAppGallery, setShowGallery, setWatchingDocID } from "../redux/app.slice";
 import { useRouter } from "next/navigation";
 import { ResourcesProps } from "../utils/types";
+import { setEditRowID } from "../redux/edit.slice";
 
 type CardProps = {
   data: ResourcesProps;
+  edit?: boolean;
 };
 
-const Card = ({ data }: CardProps) => {
+const Card = ({ data, edit }: CardProps) => {
   const { resourceID, resourceName, resourceTag, resourceType, resourceLocation, resourceGallery } =
     data;
   const router = useRouter();
@@ -18,10 +20,15 @@ const Card = ({ data }: CardProps) => {
   const gallery = JSON.parse(resourceGallery);
 
   const handleClick = () => {
-    dispatch(setShowGallery(true));
-    dispatch(setAppGallery(gallery));
-    router.push(`/gta/resources/${resourceType}/${resourceName}`);
-    setWatchingDocID(resourceID);
+    if (edit) {
+      router.push(`/editlocation/${resourceID}`);
+      dispatch(setEditRowID(resourceID));
+    } else {
+      dispatch(setShowGallery(true));
+      dispatch(setAppGallery(gallery));
+      router.push(`/gta/resources/${resourceType}/${resourceName}`);
+      setWatchingDocID(resourceID);
+    }
   };
 
   return (
@@ -34,7 +41,7 @@ const Card = ({ data }: CardProps) => {
             onClick={handleClick}
             className="text-center font-bold text-light bg-main rounded-regular p-4"
           >
-            GALLERY
+            {edit ? "SELECT" : "GALLERY"}
           </button>
         </div>
       </div>

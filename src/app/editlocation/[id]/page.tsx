@@ -3,21 +3,25 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Input from "../../interface/Input";
 import Select from "../../interface/Select";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Loading from "../../components/Loading";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import useSnackbar from "@/app/hooks/useSnackbar";
 import { StatuesLocations, ScrapLocations } from "@/app/utils/constants";
 import { RootState } from "@/app/redux/store";
 import { trpc } from "@/app/_trpc/client";
 import { AddResourceFormProps } from "@/app/utils/types";
+import { setEditRowID } from "@/app/redux/edit.slice";
+import { setAppGallery, setShowGallery } from "@/app/redux/app.slice";
 
 const Resources: string[] = ["Scrap", "Statues", "Treasures", "Animal skins"];
 
 const EditLocationPage = () => {
   const user = useSelector((state: RootState) => state.user);
   const searchID = useSelector((state: RootState) => state.edit.rowID);
+  const dispatch = useDispatch();
   const router = useRouter();
+  const params = useParams<{ id: string }>();
 
   const getLocation = trpc.getLocationByID.useQuery({ id: searchID });
   const data = getLocation.data;
@@ -27,6 +31,7 @@ const EditLocationPage = () => {
   const { showSnackbar } = useSnackbar();
 
   const [fetched, setFetched] = useState<boolean>(false);
+  const [gallery, setGallery] = useState<string[]>([]);
   const [resourcesLocations, setResourcesLocations] = useState<string[]>([""]);
   const [resource, setResource] = useState("Select a resource");
   const [location, setLocation] = useState("Select a location");
@@ -55,19 +60,19 @@ const EditLocationPage = () => {
           locationTag: data[0].resourceTag || "",
         });
         setLocation(data[0].resourceLocation);
+        setGallery(JSON.parse(data[0].resourceGallery));
       }
     }
   }, [searchID, data]);
 
   useEffect(() => {
-    const index = StatuesLocations.indexOf("All locations");
     switch (resource) {
       case "Scrap": {
         setResourcesLocations(ScrapLocations);
         return;
       }
       case "Statues": {
-        setResourcesLocations(StatuesLocations.splice(index, 1));
+        setResourcesLocations(StatuesLocations);
         return;
       }
       case "Treasures": {
@@ -84,6 +89,17 @@ const EditLocationPage = () => {
       }
     }
   }, [resource]);
+
+  useEffect(() => {
+    if (searchID === undefined || searchID === 0) {
+      dispatch(setEditRowID(JSON.parse(params.id)));
+    }
+  }, []);
+
+  const openGallery = () => {
+    dispatch(setShowGallery(true));
+    dispatch(setAppGallery(gallery));
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -163,6 +179,12 @@ const EditLocationPage = () => {
               <div className="w-full h-12">
                 <Select options={resourcesLocations} value={location} select={setLocation} />
               </div>
+              <button
+                onClick={openGallery}
+                className="bg-main text-light text-bold h-16 w-64 mt-6 text-xl rounded-regular shadow-headerLightShadow dark:shadow-headerDarkShadow"
+              >
+                GALLERY
+              </button>
             </div>
           </div>
           <button

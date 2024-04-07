@@ -41,7 +41,7 @@ export type SnackbarState = {
 export type ResourcesProps = {
   resourceID: number;
   resourceName: string;
-  resourceTag: string;
+  resourceTag: string | null;
   resourceType: string;
   resourceLocation: string;
   resourceGallery: string;

@@ -16,7 +16,7 @@ const Input = ({ placeholder, name, type, onChange, value }: Props) => {
       value={value}
       type={type}
       onChange={onChange}
-      className="w-full h-full p-2 rounded-small bg-coverLight dark:bg-coverDark"
+      className="w-full h-full p-2 rounded-small text-dark bg-coverLight dark:text-light dark:bg-coverDark"
     />
   );
 };
