@@ -4,7 +4,6 @@ import React from "react";
 import { trpc } from "../_trpc/client";
 
 const TestTRPCpage = () => {
-  const resources = trpc.getResources.useQuery();
   // const deleteNade = trpc.deleteNade.useMutation({ id: 30 });
   const nades = trpc.getNades.useQuery();
   const updateNadeQuery = trpc.updateNade.useMutation({
@@ -60,9 +59,6 @@ const TestTRPCpage = () => {
     }
   };
 
-  const getResources = () => {
-    console.log(resources.data);
-  };
   return (
     <div className="w-full h-auto flex flex-col items-center">
       <button
@@ -70,12 +66,6 @@ const TestTRPCpage = () => {
         className="mt-12 w-52 flex items-center justify-center font-bold p-4 h-12 bg-main rounded-regular"
       >
         GET NADES
-      </button>
-      <button
-        onClick={getResources}
-        className="mt-12 w-52 flex items-center justify-center font-bold p-4 h-12 bg-main rounded-regular"
-      >
-        GET RESOURCES
       </button>
       <button
         onClick={addNade}

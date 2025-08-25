@@ -8,15 +8,17 @@ import { setAppCurrentGame, setAppCurrentGameItem } from "@/app/redux/app.slice"
 import OpacityImage from "@/app/utils/OpacityImage";
 import Select from "@/app/interface/Select";
 import {
-  anubisPositions,
+  // anubisPositions,
   ancientPositions,
   nukePositionsUpper,
   nukePositionsLower,
-  vertigoPositionsUpper,
-  vertigoPositionsLower,
+  // vertigoPositionsUpper,
+  // vertigoPositionsLower,
   overpassPositions,
   miragePositions,
   infernoPositions,
+  dust2Positions,
+  trainPositions,
 } from "@/app/utils/constants";
 import NadeDot from "@/app/components/NadeDot";
 import { trpc } from "@/app/_trpc/client";
@@ -67,8 +69,8 @@ const CSRadarPage = () => {
 
   useEffect(() => {
     switch (params.map) {
-      case "Anubis":
-        return setCallouts(anubisPositions);
+      // case "Anubis":
+      //   return setCallouts(anubisPositions);
       case "Ancient":
         return setCallouts(ancientPositions);
       case "Nuke": {
@@ -76,17 +78,21 @@ const CSRadarPage = () => {
         setMap("Nuke_Upper");
         return;
       }
-      case "Vertigo": {
-        setMap("Vertigo_Upper");
-        setCallouts(vertigoPositionsUpper);
-        return;
-      }
+      // case "Vertigo": {
+      //   setMap("Vertigo_Upper");
+      //   setCallouts(vertigoPositionsUpper);
+      //   return;
+      // }
       case "Mirage":
         return setCallouts(miragePositions);
       case "Inferno":
         return setCallouts(infernoPositions);
       case "Overpass":
         return setCallouts(overpassPositions);
+      case "Dust2":
+        return setCallouts(dust2Positions);
+      case "Train":
+        return setCallouts(trainPositions);
       default:
         return setCallouts([]);
     }
@@ -103,15 +109,15 @@ const CSRadarPage = () => {
         setMap("Nuke_Lower");
       }
     }
-    if (params.map === "Vertigo") {
-      if (index === 0) {
-        setCallouts(vertigoPositionsUpper);
-        setMap("Vertigo_Upper");
-      } else if (index === 1) {
-        setCallouts(vertigoPositionsLower);
-        setMap("Vertigo_Lower");
-      }
-    }
+    // if (params.map === "Vertigo") {
+    //   if (index === 0) {
+    //     setCallouts(vertigoPositionsUpper);
+    //     setMap("Vertigo_Upper");
+    //   } else if (index === 1) {
+    //     setCallouts(vertigoPositionsLower);
+    //     setMap("Vertigo_Lower");
+    //   }
+    // }
   }, [index]);
 
   useEffect(() => {

@@ -10,29 +10,33 @@ import Input from "../interface/Input";
 import Loading from "../components/Loading";
 import {
   ancientPositions,
-  anubisPositions,
+  dust2Positions,
+  // anubisPositions,
   infernoPositions,
   miragePositions,
   nukePositionsLower,
   nukePositionsUpper,
   overpassPositions,
-  vertigoPositionsLower,
-  vertigoPositionsUpper,
+  trainPositions,
+  // vertigoPositionsLower,
+  // vertigoPositionsUpper,
 } from "../utils/constants";
 import { trpc } from "../_trpc/client";
 import { CldUploadWidget } from "next-cloudinary";
 import { NadeProps } from "../utils/types";
 
 const Maps = [
-  "Anubis",
+  // "Anubis",
   "Ancient",
   "Inferno",
   "Mirage",
   "Nuke Upper",
   "Nuke Lower",
   "Overpass",
-  "Vertigo Upper",
-  "Vertigo Lower",
+  // "Vertigo Upper",
+  // "Vertigo Lower",
+  "Dust2",
+  "Train",
 ];
 
 const Teams = ["All teams", "T", "CT"];
@@ -43,9 +47,11 @@ const AddNadePage = () => {
   const user = useSelector((state: RootState) => state.user);
   const { showSnackbar } = useSnackbar();
   const [description, setDescription] = useState<string>("");
-  const [videoLinks, setVideoLinks] = useState<string[] | string>([]);
-  const [imageLinks, setImageLinks] = useState<any[]>([]);
+  const [videoLinks, setVideoLinks] = useState<string[]>([]);
+  const [imageLinks, setImageLinks] = useState<string[]>([]);
   const [uploadStatus, setUploadStatus] = useState<boolean>(false);
+  const [uploadedVideoIds, setUploadedVideoIds] = useState<string[]>([]);
+  const [uploadedImageIds, setUploadedImageIds] = useState<string[]>([]);
   const [nade, setNade] = useState<string>("Choose a nade");
   const [callouts, setCallouts] = useState<string[]>([]);
   const [position, setPosition] = useState<string>("Choose a position");
@@ -78,8 +84,8 @@ const AddNadePage = () => {
 
   useEffect(() => {
     switch (map) {
-      case "Anubis":
-        return setCallouts(anubisPositions);
+      // case "Anubis":
+      //   return setCallouts(anubisPositions);
       case "Ancient":
         return setCallouts(ancientPositions);
       case "Nuke Upper":
@@ -87,15 +93,19 @@ const AddNadePage = () => {
       case "Nuke Lower":
         return setCallouts(nukePositionsLower);
       case "Vertigo Upper":
-        return setCallouts(vertigoPositionsUpper);
-      case "Vertigo Lower":
-        return setCallouts(vertigoPositionsLower);
+      //   return setCallouts(vertigoPositionsUpper);
+      // case "Vertigo Lower":
+      //   return setCallouts(vertigoPositionsLower);
       case "Mirage":
         return setCallouts(miragePositions);
       case "Inferno":
         return setCallouts(infernoPositions);
       case "Overpass":
         return setCallouts(overpassPositions);
+      case "Dust2":
+        return setCallouts(dust2Positions);
+      case "Train":
+        return setCallouts(trainPositions);
       default:
         return setCallouts([]);
     }
@@ -110,6 +120,10 @@ const AddNadePage = () => {
       showSnackbar("Error", "You need to select a position in order to upload a new nade");
       return;
     }
+    if (nade === "Choose a nade") {
+      showSnackbar("Error", "You need to select a nade type");
+      return;
+    }
     if (imageLinks.length === 0 && videoLinks.length === 0) {
       showSnackbar(
         "Error",
@@ -117,34 +131,41 @@ const AddNadePage = () => {
       );
       return;
     }
+    setUploadStatus(true);
+
     try {
-      const getCorrectNade = nades.data?.find((nadeItem: NadeProps) => {
+      const existing = nades.data?.find((nadeItem: NadeProps) => {
         return (
           nadeItem.nadeMap === map &&
           nadeItem.nadePosition === position &&
           nadeItem.nadeTeam === team
         );
       });
-      if (getCorrectNade) {
-        const grenades = JSON.parse(getCorrectNade.nadeGrenades);
+
+      const videoValue =
+        nade === "Execution"
+          ? JSON.stringify(videoLinks)
+          : videoLinks.length > 0
+          ? videoLinks[0]
+          : "No video";
+      const galleryValue = imageLinks.length > 0 ? JSON.stringify(imageLinks) : "No images";
+
+      let ok = false;
+      if (existing) {
+        const grenades = JSON.parse(existing.nadeGrenades);
         const grenadeToAdd = {
           type: nade,
           description: description,
-          video:
-            nade === "Execution"
-              ? JSON.stringify(videoLinks)
-              : videoLinks.length > 0
-              ? videoLinks[0]
-              : "No video",
-          gallery: imageLinks.length > 0 ? JSON.stringify(imageLinks) : "No images",
+          video: videoValue,
+          gallery: galleryValue,
         };
         grenades.push(grenadeToAdd);
-        await updateNadeQuery.mutate({
-          id: getCorrectNade.nadeID,
+        ok = (await updateNadeQuery.mutateAsync({
+          id: existing.nadeID,
           grenades: JSON.stringify(grenades),
-        });
+        })) as unknown as boolean;
       } else {
-        addNadeQuery.mutate({
+        ok = (await addNadeQuery.mutateAsync({
           map: map,
           position: position,
           team: team,
@@ -152,24 +173,53 @@ const AddNadePage = () => {
             {
               type: nade,
               description: description,
-              video:
-                nade === "Execution"
-                  ? JSON.stringify(videoLinks)
-                  : videoLinks.length > 0
-                  ? videoLinks[0]
-                  : "No video",
-              gallery: imageLinks.length > 0 ? JSON.stringify(imageLinks) : "No images",
+              video: videoValue,
+              gallery: galleryValue,
             },
           ]),
-        });
+        })) as unknown as boolean;
       }
-      setUploadStatus(false);
-      showSnackbar("Success", "Nade added successfully");
-      setDescription("");
+
+      if (ok) {
+        showSnackbar("Success", "Nade added successfully");
+        setDescription("");
+        setVideoLinks([]);
+        setImageLinks([]);
+        setUploadedVideoIds([]);
+        setUploadedImageIds([]);
+      } else {
+        showSnackbar("Error", "Server did not confirm save. Cleaning up uploaded assets.");
+        await cleanupUploadedAssets();
+        setVideoLinks([]);
+        setImageLinks([]);
+      }
     } catch (error) {
-      console.error(error);
+      console.error("addNade client error:", error);
+      showSnackbar("Error", "Upload to database failed. Cleaning up uploaded assets.");
+      await cleanupUploadedAssets();
+      setVideoLinks([]);
+      setImageLinks([]);
+    } finally {
       setUploadStatus(false);
-      showSnackbar("Error", "Upload to database failed");
+    }
+  };
+
+  const cleanupUploadedAssets = async () => {
+    if (uploadedVideoIds.length === 0 && uploadedImageIds.length === 0) return;
+    try {
+      const res = await fetch("/api/cloudinary/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ videoIds: uploadedVideoIds, imageIds: uploadedImageIds }),
+      });
+      if (!res.ok) {
+        console.error("Failed to cleanup Cloudinary assets", await res.text());
+      }
+    } catch (e) {
+      console.error("Cleanup request failed", e);
+    } finally {
+      setUploadedVideoIds([]);
+      setUploadedImageIds([]);
     }
   };
 
@@ -200,22 +250,24 @@ const AddNadePage = () => {
           </div>
           <div className="w-full h-24 flex items-center justify-center">
             <CldUploadWidget
-              uploadPreset="dci9d6id"
+              uploadPreset="custom_preset"
               onSuccess={(result, {}) => {
-                //@ts-ignore
-                if (result?.info?.format === "mp4") {
-                  //@ts-ignore
-                  setVideoLinks(prev => [...prev, result?.info?.public_id]);
-                } else if (
-                  //@ts-ignore
-                  result?.info?.format === "jpg" ||
-                  //@ts-ignore
-                  result?.info?.format === "jpeg" ||
-                  //@ts-ignore
-                  result?.info?.format === "png"
-                ) {
-                  //@ts-ignore
-                  setImageLinks(prev => [...prev, result?.info?.secure_url]);
+                const info = (result as any)?.info;
+                const resourceType = info?.resource_type;
+                const format = (info?.format || "").toLowerCase();
+                const isVideo =
+                  resourceType === "video" || ["mp4", "mov", "webm", "mkv", "avi"].includes(format);
+                const isImage =
+                  resourceType === "image" ||
+                  ["jpg", "jpeg", "png", "webp", "gif", "heic"].includes(format);
+                if (isVideo) {
+                  setVideoLinks(prev => [...prev, info?.public_id]);
+                  setUploadedVideoIds(prev => [...prev, info?.public_id]);
+                } else if (isImage) {
+                  setImageLinks(prev => [...prev, info?.secure_url]);
+                  setUploadedImageIds(prev => [...prev, info?.public_id]);
+                } else {
+                  console.warn("Unknown upload type", info);
                 }
                 showSnackbar("Success", "Your assets has been uploaded on cloud!");
                 // widget.close();
