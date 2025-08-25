@@ -542,6 +542,7 @@ export const hardcodedPositions: HardcodedPositions = {
     "Pool/Grill": { top: "18", left: "56" },
     "B Site": { top: "21", left: "48" },
     "A Site": { top: "71", left: "83.5" },
+    CT: { top: "22.5", left: "60" },
   },
   Mirage: {
     CT: { top: "91", left: "41" },
