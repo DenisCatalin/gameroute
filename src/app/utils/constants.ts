@@ -282,6 +282,7 @@ export const dust2Positions = [
   "B Doors",
   "Window",
   "Long Doors",
+  "Car",
 ];
 
 export const trainPositions = ["All positions", "A Site", "B Site"];
@@ -760,5 +761,6 @@ export const hardcodedPositions: HardcodedPositions = {
     "B Doors": { top: "22", left: "24" },
     Window: { top: "12.5", left: "23" },
     "Long Doors": { top: "55", left: "70" },
+    Car: { top: "26", left: "97" },
   },
 };
