@@ -211,13 +211,6 @@ const CSRadarPage = () => {
               <NadeDot nadeData={data} type={nade} team={team} />
             </div>
           ))}
-          {/* <div
-            className={`bg-dark top-62percent left-87percent rounded-full border-4 flex items-center justify-center border-main absolute transform -translate-x-1/2 -translate-y-1/2 ${
-              nade === "Execution"
-                ? "lg:w-24 lg:h-24 md:w-16 md:h-16 xsm:w-12 xsm:h-12"
-                : "lg:w-10 lg:h-10 md:w-6 md:h-6 xsm:w-4 xsm:h-4"
-            } cursor-pointer hover:bg-coverLight transition`}
-          /> */}
         </div>
       </div>
       <NadeWrapper nades={getNades} />
