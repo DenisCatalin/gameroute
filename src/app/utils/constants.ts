@@ -267,7 +267,22 @@ export const nukePositionsLower = [
 //   "Stairs",
 // ];
 
-export const dust2Positions = ["All positions", "A Site", "B Site"];
+export const dust2Positions = [
+  "All positions",
+  "A Site",
+  "B Site",
+  "Upper Tunnels",
+  "Lower Tunnels",
+  "XBox",
+  "Top Mid",
+  "CT",
+  "Elevator",
+  "Long",
+  "Short",
+  "B Doors",
+  "Window",
+  "Long Doors",
+];
 
 export const trainPositions = ["All positions", "A Site", "B Site"];
 
@@ -730,5 +745,20 @@ export const hardcodedPositions: HardcodedPositions = {
     "Under Stairs": { top: "40", left: "9" },
     Toilets: { top: "66", left: "31" },
     Stairs: { top: "74", left: "21.5" },
+  },
+  Dust2: {
+    "A Site": { top: "17", left: "82" },
+    "B Site": { top: "24", left: "12" },
+    "Upper Tunnels": { top: "36", left: "7.5" },
+    "Lower Tunnels": { top: "39.5", left: "41" },
+    XBox: { top: "40", left: "47" },
+    "Top Mid": { top: "58", left: "46" },
+    CT: { top: "24", left: "48" },
+    Elevator: { top: "23.5", left: "83" },
+    Long: { top: "23", left: "88" },
+    Short: { top: "37", left: "65" },
+    "B Doors": { top: "22", left: "24" },
+    Window: { top: "12.5", left: "23" },
+    "Long Doors": { top: "55", left: "70" },
   },
 };
