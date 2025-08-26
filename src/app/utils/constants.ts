@@ -322,6 +322,7 @@ export const infernoPositions = [
   "Porch/Roof",
   "B Site",
   "A Site",
+  "CT",
 ];
 
 export const miragePositions = [
