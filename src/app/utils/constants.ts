@@ -170,6 +170,8 @@ export const ancientPositions = [
   "Temple",
   "A Site",
   "B Site",
+  "CT",
+  "A Boost",
 ];
 
 export const nukePositionsUpper = [
@@ -339,6 +341,7 @@ export const infernoPositions = [
   "B Site",
   "A Site",
   "CT",
+  "A Boost",
 ];
 
 export const miragePositions = [
@@ -509,6 +512,8 @@ export const hardcodedPositions: HardcodedPositions = {
     Triple: { top: "24", left: "32" },
     "B Site": { top: "40", left: "85" },
     "A Site": { top: "24", left: "27" },
+    CT: { top: "18.5", left: "35" },
+    "A Boost": { top: "32", left: "15" },
   },
   Inferno: {
     Ledge: { top: "62", left: "29" },
@@ -560,6 +565,7 @@ export const hardcodedPositions: HardcodedPositions = {
     "B Site": { top: "23", left: "48" },
     "A Site": { top: "71", left: "83.5" },
     CT: { top: "22.5", left: "60" },
+    "A Boost": { top: "18.5", left: "35" },
   },
   Mirage: {
     CT: { top: "91", left: "41" },
@@ -608,7 +614,7 @@ export const hardcodedPositions: HardcodedPositions = {
     "E Box": { top: "32", left: "27" },
     "Empty/Backsite": { top: "28", left: "16" },
     "Door/Long": { top: "35", left: "10" },
-    Window: { top: "35", left: "19" },
+    Window: { top: "44", left: "37" },
     Sneaky: { top: "45", left: "11" },
     Market: { top: "42", left: "18" },
     "A Site": { top: "78", left: "56" },
