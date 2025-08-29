@@ -75,7 +75,7 @@ const CSRadarPage = () => {
         return setCallouts(ancientPositions);
       case "Nuke": {
         setCallouts(nukePositionsUpper);
-        setMap("Nuke_Upper");
+        setMap("Nuke Upper");
         return;
       }
       // case "Vertigo": {
@@ -103,10 +103,10 @@ const CSRadarPage = () => {
     if (params.map === "Nuke") {
       if (index === 0) {
         setCallouts(nukePositionsUpper);
-        setMap("Nuke_Upper");
+        setMap("Nuke Upper");
       } else if (index === 1) {
         setCallouts(nukePositionsLower);
-        setMap("Nuke_Lower");
+        setMap("Nuke Lower");
       }
     }
     // if (params.map === "Vertigo") {
@@ -122,17 +122,36 @@ const CSRadarPage = () => {
 
   useEffect(() => {
     if (positionsFromDB) {
-      const filteredPositions = positionsFromDB.filter(position =>
-        JSON.parse(position.nadeGrenades).some(
-          (grenade: NadesProp) =>
-            grenade.type === nade &&
-            position.nadeMap === map &&
-            (location === "All positions" || position.nadePosition === location) &&
-            (team === "All teams" || position.nadeTeam === team) &&
-            hardcodedPositions[position.nadeMap] &&
-            hardcodedPositions[position.nadeMap][position.nadePosition]
-        )
-      );
+      const normalizedMap = (map || "").trim().toLowerCase();
+
+      const findMapKey = (name: string) => {
+        const target = (name || "").trim().toLowerCase();
+        return Object.keys(hardcodedPositions).find(k => k.trim().toLowerCase() === target);
+      };
+
+      const filteredPositions = positionsFromDB.filter(position => {
+        const dbMap = (position.nadeMap || "").trim().toLowerCase();
+        const dbPos = (position.nadePosition || "").trim();
+        const dbTeam = (position.nadeTeam || "").trim();
+
+        if (
+          !JSON.parse(position.nadeGrenades).some((grenade: NadesProp) => grenade.type === nade)
+        ) {
+          return false;
+        }
+
+        if (dbMap !== normalizedMap) return false;
+
+        if (location !== "All positions" && position.nadePosition !== location) return false;
+        if (team !== "All teams" && dbTeam !== team) return false;
+
+        const mapKey = findMapKey(position.nadeMap);
+        if (!mapKey) return false;
+        const posKey = Object.keys(hardcodedPositions[mapKey]).find(
+          p => p.trim().toLowerCase() === dbPos.trim().toLowerCase()
+        );
+        return !!posKey;
+      });
 
       const combinedPositions: {
         [key: string]: {
@@ -145,14 +164,23 @@ const CSRadarPage = () => {
       } = {};
 
       filteredPositions.forEach(position => {
-        const key = `${position.nadeMap}_${position.nadePosition}`;
+        const mapKey = Object.keys(hardcodedPositions).find(
+          k => k.trim().toLowerCase() === position.nadeMap.trim().toLowerCase()
+        ) as string;
+        const posKey = Object.keys(hardcodedPositions[mapKey]).find(
+          p => p.trim().toLowerCase() === position.nadePosition.trim().toLowerCase()
+        ) as string;
+
+        if (!mapKey || !posKey) return;
+
+        const key = `${mapKey}_${posKey}`;
         if (!combinedPositions[key]) {
           combinedPositions[key] = {
-            top: hardcodedPositions[position.nadeMap][position.nadePosition].top,
-            left: hardcodedPositions[position.nadeMap][position.nadePosition].left,
+            top: hardcodedPositions[mapKey][posKey].top,
+            left: hardcodedPositions[mapKey][posKey].left,
             team: team,
             grenades: [],
-            position: position.nadePosition,
+            position: posKey,
           };
         }
 
@@ -162,7 +190,6 @@ const CSRadarPage = () => {
       });
 
       const combinedPositionsArray = Object.values(combinedPositions);
-
       setPositions(combinedPositionsArray);
     }
   }, [nade, location, team, map, positionsFromDB]);

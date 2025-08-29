@@ -666,7 +666,7 @@ export const hardcodedPositions: HardcodedPositions = {
     "B Site": { top: "30", left: "67" },
     "B Short": { top: "37", left: "65" },
   },
-  Nuke_Upper: {
+  "Nuke Upper": {
     Roof: { top: "55", left: "40.5" },
     "Lobby/Vending": { top: "55", left: "45" },
     Squeaky: { top: "63.3", left: "49" },
@@ -698,7 +698,7 @@ export const hardcodedPositions: HardcodedPositions = {
     Tetris: { top: "59", left: "54.5" },
     "A Site": { top: "47", left: "56" },
   },
-  Nuke_Lower: {
+  "Nuke Lower": {
     Ramp: { top: "27", left: "55.7" },
     Toxic: { top: "40", left: "52.5" },
     Dark: { top: "40", left: "59.5" },
